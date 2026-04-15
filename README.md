@@ -83,6 +83,56 @@ Exatamente 1 município por UF — as capitais estaduais. Benchmark de qualidade
 
 ---
 
+## Achados HDBSCAN — Sub-estruturas dentro dos clusters
+
+O HDBSCAN foi aplicado dentro de cada macro-cluster K-Means para revelar **exceções e subestruturas de densidade local**: municípios que fogem do padrão do seu próprio cluster — seja para melhor ou para pior. Esses são os achados mais acionáveis do framework.
+
+> Dos 5.570 municípios, **204 (3,7%)** formaram sub-clusters densos. Os demais foram classificados como *ruído* — casos intermediários sem vizinhança suficientemente densa.
+
+### C3 Norte/Amazônico — dois sub-clusters revelam padrões opostos
+
+![Sub-clusters HDBSCAN no C3](3-KMeans+HDBSCAN/fig_hdbscan_c3_subgrupos.png)
+
+O cluster de pior qualidade do país esconde duas realidades distintas:
+
+| Grupo | Mun. | IND4 | IND5 | Perfil |
+|-------|------|------|------|--------|
+| **Ruído** | 85 | −1,77 | −2,28 | Pior de todos — sem conectividade nem qualidade operacional |
+| **Sub-0 — Amazônia profunda** | 112 | −1,81 | −2,19 | PA, AM, AC, RR — atendimento crítico, mas IND9 acima da média (+0,14) |
+| **Sub-1 — Agronegócio MT/MS** | 19 | −0,76 | −0,59 | **Exceção positiva** — remotos e rurais, mas com qualidade muito superior |
+
+**Destaque — Sub-cluster 3001 (Agronegócio MT/MS):** 19 municípios de Mato Grosso (15), Mato Grosso do Sul (3) e Minas Gerais (1) — Tangará da Serra, Campo Novo do Parecis, Canarana, Cáceres, Juína, entre outros. Apesar de serem municípios extensos e rurais com economia agropecuária (classificados como "Norte/Amazônico" pelo K-Means), a dinâmica econômica do agronegócio viabilizou qualidade de telecom muito acima dos vizinhos: IND5 salta de −2,19σ para −0,59σ. **São a prova de que o contexto geográfico não é impeditivo quando há investimento.**
+
+---
+
+### C0 Urbano-Avançado — dois tipos de excelência
+
+![Sub-clusters HDBSCAN no C0](3-KMeans+HDBSCAN/fig_hdbscan_c0_subgrupos.png)
+
+Dentro do melhor cluster, o HDBSCAN separou dois grupos distintos de alta performance:
+
+| Grupo | Mun. | IND4 | INF4-UP | Perfil |
+|-------|------|------|---------|--------|
+| **Sub-0 — Elite total** | 50 | −0,12 | +1,51 | SP (28), MG, RJ — topo absoluto em todos os indicadores |
+| **Sub-1 — Gargalo de atendimento** | 23 | **−0,37** | +1,36 | SP (11), RJ (6) — alta velocidade, mas atendimento sobrecarregado |
+
+**Destaque — Sub-cluster 1 (Gargalo metrópoles):** municípios de SP e RJ com infraestrutura de ponta (INF4-UP +1,36σ, IND9 +0,70σ) mas IND4 negativo — a taxa de atendimento cai porque o volume de chamados nas grandes metrópoles supera a capacidade das operadoras. Fenômeno de saturação operacional, não técnica.
+
+---
+
+### Síntese dos achados HDBSCAN
+
+| Sub-cluster | Municípios | Insight chave |
+|-------------|-----------|--------------|
+| C3 Sub-1 — Agronegócio MT/MS | 19 | Exceção **positiva** no pior cluster: remotos, rurais, mas com boa qualidade |
+| C3 Sub-0 — Amazônia profunda | 112 | Péssimo atendimento/prazo, mas velocidade razoável (possivelmente satelital) |
+| C3 Ruído | 85 | Caso mais crítico: nem conectividade nem qualidade operacional |
+| C0 Sub-0 — Elite total | 50 | Benchmark máximo nacional em todos os indicadores |
+| C0 Sub-1 — Gargalo metrópoles | 23 | Qualidade técnica alta, mas saturação de atendimento em SP e RJ |
+| C1, C2, C4 | — | Sem sub-estruturas densas (grupos homogêneos, dispersos ou pequenos) |
+
+---
+
 ## Implicações para políticas públicas
 
 | Eixo | Clusters-alvo | Problema | Indicadores-alvo |
