@@ -1,0 +1,27 @@
+,0
+IND2,float64
+IND4,float64
+IND5,float64
+IND8,float64
+IND9,float64
+INF1,float64
+INF4-UP,float64
+Código da Grande Região,float64
+"Valor adicionado bruto da Agropecuária, 
+a preços correntes
+(R$ 1.000)",float64
+"Valor adicionado bruto da Indústria,
+a preços correntes
+(R$ 1.000)",float64
+"Produto Interno Bruto per capita, 
+a preços correntes
+(R$ 1,00)",float64
+POP__Área da unidade territorial (Quilômetros quadrados),float64
+POP__Densidade demográfica (Habitante por quilômetro quadrado),float64
+LAT__lat,float64
+LAT__lon,float64
+LAT__capital,Float64
+LAT__siafi_id,Float64
+LAT__ddd,Float64
+URB__Rural,float64
+IDHM__IDHM 2010,float64

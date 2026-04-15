@@ -1,0 +1,59 @@
+variavel,grupo,status
+IND2,telecom,mantida
+IND4,telecom,mantida
+IND5,telecom,mantida
+IND8,telecom,mantida
+IND9,telecom,mantida
+INF1,telecom,mantida
+INF4-DL,telecom,mantida
+INF4-UP,telecom,mantida
+Código da Grande Região,socioecon,mantida
+Código da Unidade da Federação,socioecon,mantida
+Código da Mesorregião,socioecon,mantida
+Código da Microrregião,socioecon,mantida
+Código da Região Geográfica Imediata,socioecon,mantida
+Código da Região Geográfica Intermediária,socioecon,mantida
+Código Concentração Urbana,socioecon,mantida
+Código Arranjo Populacional,socioecon,mantida
+Código da Região Rural,socioecon,mantida
+"Valor adicionado bruto da Agropecuária, 
+a preços correntes
+(R$ 1.000)",socioecon,mantida
+"Valor adicionado bruto da Indústria,
+a preços correntes
+(R$ 1.000)",socioecon,mantida
+"Valor adicionado bruto dos Serviços,
+a preços correntes 
+- exceto Administração, defesa, educação e saúde públicas e seguridade social
+(R$ 1.000)",socioecon,mantida
+"Valor adicionado bruto da Administração, defesa, educação e saúde públicas e seguridade social, 
+a preços correntes
+(R$ 1.000)",socioecon,mantida
+"Valor adicionado bruto total, 
+a preços correntes
+(R$ 1.000)",socioecon,mantida
+"Impostos, líquidos de subsídios, sobre produtos, 
+a preços correntes
+(R$ 1.000)",socioecon,mantida
+"Produto Interno Bruto, 
+a preços correntes
+(R$ 1.000)",socioecon,mantida
+"Produto Interno Bruto per capita, 
+a preços correntes
+(R$ 1,00)",socioecon,mantida
+POP__População residente (Pessoas),socioecon,mantida
+POP__Área da unidade territorial (Quilômetros quadrados),socioecon,mantida
+POP__Densidade demográfica (Habitante por quilômetro quadrado),socioecon,mantida
+LAT__lat,socioecon,mantida
+LAT__lon,socioecon,mantida
+LAT__capital,socioecon,removida_quasi
+LAT__siafi_id,socioecon,mantida
+LAT__ddd,socioecon,mantida
+URB__Total,socioecon,mantida
+URB__Urbana,socioecon,mantida
+URB__Rural,socioecon,mantida
+IDHM__IDHM 2010,socioecon,mantida
+IDHM__Produto Interno Bruto per capita 2013,socioecon,mantida
+IDHM__Produto Interno Bruto per capita 2014,socioecon,mantida
+IDHM__Produto Interno Bruto per capita 2015,socioecon,mantida
+IDHM__Produto Interno Bruto per capita 2016,socioecon,mantida

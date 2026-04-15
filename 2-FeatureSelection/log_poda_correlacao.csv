@@ -1,0 +1,54 @@
+motivo,par,removida,ρ
+|ρ|>=0.8,POP__População residente (Pessoas) ~ URB__Total,POP__População residente (Pessoas),1.0
+|ρ|>=0.8,Código da Unidade da Federação ~ Código da Região Geográfica Imediata,Código da Região Geográfica Imediata,1.0
+|ρ|>=0.8,Código da Unidade da Federação ~ Código da Microrregião,Código da Microrregião,1.0
+|ρ|>=0.8,Código da Unidade da Federação ~ Código da Região Geográfica Intermediária,Código da Região Geográfica Intermediária,1.0
+|ρ|>=0.8,Código da Unidade da Federação ~ Código da Mesorregião,Código da Mesorregião,1.0
+|ρ|>=0.8,Código da Unidade da Federação ~ Código Concentração Urbana,Código Concentração Urbana,1.0
+|ρ|>=0.8,Código da Unidade da Federação ~ Código Arranjo Populacional,Código Arranjo Populacional,0.999
+|ρ|>=0.8,"Valor adicionado bruto total, 
+a preços correntes
+(R$ 1.000) ~ Produto Interno Bruto, 
+a preços correntes
+(R$ 1.000)","Valor adicionado bruto total, 
+a preços correntes
+(R$ 1.000)",0.999
+|ρ|>=0.8,URB__Total ~ URB__Urbana,URB__Urbana,0.996
+|ρ|>=0.8,Código da Unidade da Federação ~ Código da Região Rural,Código da Unidade da Federação,0.978
+|ρ|>=0.8,"Valor adicionado bruto da Administração, defesa, educação e saúde públicas e seguridade social, 
+a preços correntes
+(R$ 1.000) ~ URB__Total","Valor adicionado bruto da Administração, defesa, educação e saúde públicas e seguridade social, 
+a preços correntes
+(R$ 1.000)",0.976
+|ρ|>=0.8,"Valor adicionado bruto dos Serviços,
+a preços correntes 
+- exceto Administração, defesa, educação e saúde públicas e seguridade social
+(R$ 1.000) ~ Produto Interno Bruto, 
+a preços correntes
+(R$ 1.000)","Produto Interno Bruto, 
+a preços correntes
+(R$ 1.000)",0.976
+|ρ|>=0.8,IDHM__Produto Interno Bruto per capita 2013 ~ IDHM__Produto Interno Bruto per capita 2014,IDHM__Produto Interno Bruto per capita 2014,0.972
+|ρ|>=0.8,IDHM__Produto Interno Bruto per capita 2015 ~ IDHM__Produto Interno Bruto per capita 2016,IDHM__Produto Interno Bruto per capita 2015,0.969
+|ρ|>=0.8,Código da Grande Região ~ Código da Região Rural,Código da Região Rural,0.955
+|ρ|>=0.8,"Valor adicionado bruto dos Serviços,
+a preços correntes 
+- exceto Administração, defesa, educação e saúde públicas e seguridade social
+(R$ 1.000) ~ Impostos, líquidos de subsídios, sobre produtos, 
+a preços correntes
+(R$ 1.000)","Valor adicionado bruto dos Serviços,
+a preços correntes 
+- exceto Administração, defesa, educação e saúde públicas e seguridade social
+(R$ 1.000)",0.945
+|ρ|>=0.8,IDHM__Produto Interno Bruto per capita 2013 ~ IDHM__Produto Interno Bruto per capita 2016,IDHM__Produto Interno Bruto per capita 2013,0.899
+|ρ|>=0.8,INF4-DL ~ INF4-UP,INF4-DL,0.895
+|ρ|>=0.8,"Produto Interno Bruto per capita, 
+a preços correntes
+(R$ 1,00) ~ IDHM__Produto Interno Bruto per capita 2016",IDHM__Produto Interno Bruto per capita 2016,0.862
+|ρ|>=0.8,"Valor adicionado bruto da Indústria,
+a preços correntes
+(R$ 1.000) ~ Impostos, líquidos de subsídios, sobre produtos, 
+a preços correntes
+(R$ 1.000)","Impostos, líquidos de subsídios, sobre produtos, 
+a preços correntes
+(R$ 1.000)",0.851

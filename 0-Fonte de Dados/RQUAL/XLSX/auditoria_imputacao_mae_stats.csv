@@ -1,0 +1,9 @@
+indicador,metodo_escolhido,mae_medio,mae_std,n_testes
+IND2,media_municipal,0.0,,1
+IND4,media_municipal,0.0,,1
+IND5,media_municipal,0.0,,1
+IND8,media_municipal,0.0,,1
+IND9,KNN(k=5),0.0,,1
+INF1,KNN(k=5),0.0,,1
+INF4-DL,KNN(k=5),0.0,,1
+INF4-UP,KNN(k=5),0.0,,1

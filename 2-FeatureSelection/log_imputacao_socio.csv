@@ -1,0 +1,5 @@
+variavel,n_nulos_antes,pct_nulos_antes,n_nulos_depois,pct_nulos_depois,estrategia,meta
+Código Concentração Urbana,4910,88.151,0,0.0,mediana_por_UF,{'med_por_uf': 'aplicada'}
+Código Arranjo Populacional,4614,82.837,0,0.0,mediana_por_UF,{'med_por_uf': 'aplicada'}
+URB__Rural,32,0.575,0,0.0,mediana_por_UF,{'med_por_uf': 'aplicada'}
+IDHM__Produto Interno Bruto per capita 2015,1,0.018,0,0.0,mediana_por_UF,{'med_por_uf': 'aplicada'}

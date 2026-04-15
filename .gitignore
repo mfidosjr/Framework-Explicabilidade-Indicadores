@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.venv/
+
+# Arquivos grandes / archive
+OLD/
+
+# Modelos e dados gerados (tracked via Git LFS se necessário)
+# *.pkl
+# *.parquet

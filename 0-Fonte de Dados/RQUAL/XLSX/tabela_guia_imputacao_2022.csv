@@ -1,0 +1,9 @@
+Indicador,classe,meses_completos,missing_medio_pct,missing_p95_pct,metodo_sugerido
+IND8,baixa,6,0.0,0.0,Média por município (por prestadora) + média municipal final
+IND5,baixa,0,0.65,1.9,Média por município (por prestadora) + média municipal final
+IND2,baixa,0,1.0,1.11,Média por município (por prestadora) + média municipal final
+IND4,baixa,0,1.47,2.43,Média por município (por prestadora) + média municipal final
+INF1,moderada,0,10.76,16.96,KNN (k=5) ou Mediana por UF (comparar MAE)
+INF4-UP,alta,0,40.73,71.88,Regressão (com IND4/IND5/IND8/IND9/INF1) ou KNN (menor MAE)
+INF4-DL,alta,0,41.7,72.19,Regressão (com IND4/IND5/IND8/IND9/INF1) ou KNN (menor MAE)
+IND9,alta,0,63.45,65.32,Regressão (com IND4/IND5/IND8/IND9/INF1) ou KNN (menor MAE)

@@ -1,0 +1,58 @@
+,mean_orig,std_orig,mean_z,std_z,dev_mean,dev_std,dev_tot
+IND8,99.81502,0.271522,0.0,1.0,0.0,0.0,0.0
+Código da Grande Região,2.897846,1.088215,0.0,1.0,0.0,0.0,0.0
+IDHM__IDHM 2010,0.659222,0.072004,0.0,1.0,0.0,0.0,0.0
+Código da Região Geográfica Imediata,323793.462657,98340.639166,0.0,1.0,0.0,0.0,0.0
+Código da Região Geográfica Intermediária,3241.852603,983.813693,0.0,1.0,0.0,0.0,0.0
+Código da Mesorregião,3242.038779,983.637524,0.0,1.0,0.0,0.0,0.0
+Código da Região Rural,3247.707181,978.815552,0.0,1.0,0.0,0.0,0.0
+IDHM__Produto Interno Bruto per capita 2015,14.181361,14.471978,-0.0,1.0,0.0,0.0,0.0
+INF4-UP,8.802235,10.966902,0.0,1.0,0.0,0.0,0.0
+Código da Microrregião,32395.371454,9834.924338,-0.0,1.0,0.0,0.0,0.0
+IND2,0.566815,0.439539,-0.0,1.0,0.0,0.0,0.0
+URB__Rural,4617.612676,5573.058421,-0.0,1.0,0.0,0.0,0.0
+"Produto Interno Bruto, 
+a preços correntes
+(R$ 1.000)",1617978.815081,13774623.680916,0.0,1.0,0.0,0.0,0.0
+POP__Densidade demográfica (Habitante por quilômetro quadrado),116.002562,594.978964,0.0,1.0,0.0,0.0,0.0
+LAT__lat,-29.63028,23.987117,-0.0,1.0,0.0,0.0,0.0
+Código Arranjo Populacional,3537059.123431,821610.005242,0.0,1.0,0.0,0.0,0.0
+IND4,85.175431,9.504701,-0.0,1.0,0.0,0.0,0.0
+URB__Total,36459.740754,206518.731949,-0.0,1.0,0.0,0.0,0.0
+POP__População residente (Pessoas),36459.740754,206518.731949,-0.0,1.0,0.0,0.0,0.0
+Código da Unidade da Federação,32.377738,9.833862,-0.0,1.0,0.0,0.0,0.0
+Código Concentração Urbana,3509617.901515,791112.99858,0.0,1.0,0.0,0.0,0.0
+IDHM__Produto Interno Bruto per capita 2014,14.704421,16.840329,0.0,1.0,0.0,0.0,0.0
+IND9,82.056657,12.495131,-0.0,1.0,0.0,0.0,0.0
+URB__Urbana,31868.656553,205811.175542,0.0,1.0,0.0,0.0,0.0
+INF1,91.625906,51.304818,0.0,1.0,0.0,0.0,0.0
+IDHM__Produto Interno Bruto per capita 2013,14.558754,16.813415,-0.0,1.0,0.0,0.0,0.0
+IDHM__Produto Interno Bruto per capita 2016,14.029775,13.490739,-0.0,1.0,0.0,0.0,0.0
+"Valor adicionado bruto total, 
+a preços correntes
+(R$ 1.000)",1384919.030527,11154167.678151,0.0,1.0,0.0,0.0,0.0
+IND5,78.328038,18.062213,-0.0,1.0,0.0,0.0,0.0
+"Valor adicionado bruto da Agropecuária, 
+a preços correntes
+(R$ 1.000)",106119.389586,239183.843578,0.0,1.0,0.0,0.0,0.0
+POP__Área da unidade territorial (Quilômetros quadrados),1525.553304,5605.417197,0.0,1.0,0.0,0.0,0.0
+"Impostos, líquidos de subsídios, sobre produtos, 
+a preços correntes
+(R$ 1.000)",233059.784562,2696137.753138,0.0,1.0,0.0,0.0,0.0
+"Produto Interno Bruto per capita, 
+a preços correntes
+(R$ 1,00)",33871.282487,41908.722752,0.0,1.0,0.0,0.0,0.0
+LAT__lon,-42.019781,14.055263,-0.0,1.0,0.0,0.0,0.0
+LAT__ddd,57.099461,25.42275,-0.0,1.0,0.0,0.0,0.0
+LAT__siafi_id,4519.878276,3050.156056,-0.0,1.0,0.0,0.0,0.0
+"Valor adicionado bruto dos Serviços,
+a preços correntes 
+- exceto Administração, defesa, educação e saúde públicas e seguridade social
+(R$ 1.000)",702003.41113,8354327.756059,-0.0,1.0,0.0,0.0,0.0
+"Valor adicionado bruto da Indústria,
+a preços correntes
+(R$ 1.000)",357953.141834,2116548.852782,0.0,1.0,0.0,0.0,0.0
+INF4-DL,13.351812,11.265912,0.0,1.0,0.0,0.0,0.0
+"Valor adicionado bruto da Administração, defesa, educação e saúde públicas e seguridade social, 
+a preços correntes
+(R$ 1.000)",218843.087976,1935273.695732,-0.0,1.0,0.0,0.0,0.0

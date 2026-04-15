@@ -1,0 +1,9 @@
+indicador,classe,metodo_escolhido,mae_validacao,n_nulos_antes,n_nulos_depois
+IND9,alta,KNN(k=5),0.0,2431,0
+INF4-DL,alta,KNN(k=5),0.0,1555,0
+INF4-UP,alta,KNN(k=5),0.0,1496,0
+IND2,baixa,media_municipal,0.0,49,0
+IND4,baixa,media_municipal,0.0,62,0
+IND5,baixa,media_municipal,0.0,10,0
+IND8,baixa,media_municipal,0.0,0,0
+INF1,moderada,KNN(k=5),0.0,48,0
