@@ -85,7 +85,7 @@ Exatamente 1 município por UF — as capitais estaduais. Benchmark de qualidade
 
 ## Municípios Excepcionais — Evolução Metodológica
 
-Para identificar municípios que fogem do padrão do seu próprio cluster, testamos três abordagens ([NB07](3-KMeans+HDBSCAN/07-UMAP_HDBSCAN_LOF.ipynb)) e comparamos os resultados ([NB09](3-KMeans+HDBSCAN/09-Comparacao_Achados_HDBSCAN_vs_LOF.ipynb)):
+Para identificar municípios que fogem do padrão do seu próprio cluster, testamos três abordagens ([NB08](3-KMeans+HDBSCAN/08-UMAP_HDBSCAN_LOF.ipynb)) e comparamos os resultados ([NB09](3-KMeans+HDBSCAN/09-Comparacao_Achados_HDBSCAN_vs_LOF.ipynb)):
 
 | Tentativa | Abordagem | Taxa de Ruído | Municípios | Conclusão |
 |-----------|-----------|:---:|:---:|-----------|
@@ -156,6 +156,67 @@ Dentro do melhor cluster, o HDBSCAN separou dois grupos distintos de alta perfor
 | C0 Sub-0 — Elite total | 50 | Benchmark máximo nacional em todos os indicadores |
 | C0 Sub-1 — Gargalo metrópoles | 23 | Qualidade técnica alta, mas saturação de atendimento em SP e RJ |
 | C1, C2, C4 | — | Sem sub-estruturas densas (grupos homogêneos, dispersos ou pequenos) |
+
+---
+
+---
+
+## Achados LOF — Anomalias individuais por cluster
+
+O LOF identificou **559 municípios excepcionais** (10% por cluster) com combinações atípicas de indicadores, cobrindo todos os 5 clusters — incluindo C1 e C2, que eram analiticamente opacos ao HDBSCAN.
+
+> **LOF score > 1.5** é usado como limiar de alta excentricidade. Score máximo observado: **2.266** (Águas de São Pedro/SP).
+
+### C1 — Intermediário: 306 excepcionais
+
+O maior volume de exceções LOF — esperado dado o tamanho do cluster (3.054 municípios).
+
+| Município | UF | LOF | Padrão atípico |
+|-----------|-----|-----|----------------|
+| **Águas de São Pedro** | SP | 2.27 | Altíssima velocidade de download (+1.12σ) com cobertura fraca — estância balneária com acesso premium |
+| **Tunas** | RS | 1.88 | Taxa de atendimento crítica (IND4 = −4.06σ) e resolução abissal (IND5 = −4.31σ) |
+| **Silvanópolis** | TO | 1.82 | Pior velocidade de download do cluster (IND9 = −4.11σ) com cobertura acima da média |
+| **São Vendelino** | RS | 1.89 | Taxa de reclamações extrema (IND2 = +4.28σ) — caso extremo de insatisfação |
+| **Camargo** | RS | 1.99 | Upload excepcional (+3.10σ) — desvio positivo isolado |
+
+**Achado:** C1 concentra os maiores extremos individuais do país — municípios "normais" na maioria dos indicadores, mas com um ou dois indicadores em valores impossíveis para o contexto.
+
+---
+
+### C2 — Nordeste Periférico: 206 excepcionais
+
+| Município | UF | LOF | Padrão atípico |
+|-----------|-----|-----|----------------|
+| **São Bento do Norte** | RN | 2.23 | Combinação rara: alta IND4 com IND5 negativo — atende mas não resolve |
+| **Fernando de Noronha** | PE | 2.01 | Atendimento e resolução no piso absoluto (IND4 = IND5 = −4.33σ) — isolamento geográfico extremo |
+| **Curionópolis** | PA | 1.98 | Disponibilidade crítica (IND8 = −4.16σ) — único no C2 com esse perfil |
+| **Arapiraca** | AL | 1.84 | Upload elevado (+1.71σ) — contrasta com o perfil típico do Nordeste |
+
+**Achado:** Fernando de Noronha é o caso mais extremo do C2 — isolamento geográfico cria um perfil de telecom incomparável. Curionópolis destaca-se como o único município do cluster com disponibilidade de serviço crítica.
+
+---
+
+### C4 — Capitais/Destaques: 3 excepcionais
+
+| Município | UF | LOF | Padrão atípico |
+|-----------|-----|-----|----------------|
+| **Porto Velho** | RO | 1.29 | Upload elevado (+1.25σ), mas IND5 levemente negativo — capital amazônica fora do perfil das demais |
+| **Brasília** | DF | 1.18 | Upload excepcionalmente alto (+1.31σ) — desvio por concentração de infraestrutura federal |
+| **Rio Branco** | AC | 1.09 | Upload mais alto do C4 (+2.20σ) — capital remota com investimento desproporcional em upload |
+
+**Achado:** As 3 capitais excepcionais do C4 são amazônicas — Porto Velho, Brasília e Rio Branco — que se distanciam do padrão das demais capitais por um perfil de upload elevado combinado com SLA levemente abaixo do esperado para o cluster.
+
+---
+
+### Síntese dos achados LOF
+
+| Cluster | Excepcionais LOF | Padrão dominante de desvio |
+|---------|:---:|---|
+| **C0 — Urbano-Avançado** | 22 | Municípios com upload ou IND4 fora do padrão de excelência do cluster |
+| **C1 — Intermediário** | 306 | Extremos individuais — IND4, IND5 ou IND9 em valores impossíveis para o contexto |
+| **C2 — Nordeste Periférico** | 206 | Disponibilidade ou upload atípicos; Fernando de Noronha como caso-limite |
+| **C3 — Norte/Amazônico** | 22 | Desvios positivos pontuais dentro do pior cluster do país |
+| **C4 — Capitais** | 3 | Capitais amazônicas com perfil de upload desconexo das demais capitais |
 
 ---
 
@@ -306,7 +367,7 @@ K=2 tem o maior silhouette (0,831), mas produz apenas 2 macro-grupos (Sul-Sudest
 ---
 
 ### Notebook 08 — UMAP + HDBSCAN vs LOF (Municípios Excepcionais)
-`3-KMeans+HDBSCAN/07-UMAP_HDBSCAN_LOF.ipynb`
+`3-KMeans+HDBSCAN/08-UMAP_HDBSCAN_LOF.ipynb`
 
 **Entrada:** `rqual_2022_clusterizado.parquet`  
 **Saída:** `rqual_2022_clusterizado_v2.parquet` + `municipios_excepcionais_lof.csv`

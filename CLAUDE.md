@@ -47,7 +47,7 @@ Framework-Explicabilidade-Indicadores/
 | 5 | `2-FeatureSelection/04-Seleção de feicoes.ipynb` | `rqual_2022_consolidado_clean.parquet` | `rqual_2022_feats_reduzidas.parquet` |
 | 6 | `3-KMeans+HDBSCAN/05-Kmeans.ipynb` | `rqual_2022_feats_reduzidas.parquet` | `rqual_2022_clusterizado.parquet` + modelos `.pkl` |
 | 7 | `3-KMeans+HDBSCAN/06-Interpretacao_Clusters.ipynb` | `rqual_2022_clusterizado.parquet` | Tabelas interpretativas, figuras, `tabela_resumo_clusters.csv` |
-| 8 | `3-KMeans+HDBSCAN/07-UMAP_HDBSCAN_LOF.ipynb` | `rqual_2022_clusterizado.parquet` | `rqual_2022_clusterizado_v2.parquet`, `municipios_excepcionais_lof.csv` |
+| 8 | `3-KMeans+HDBSCAN/08-UMAP_HDBSCAN_LOF.ipynb` | `rqual_2022_clusterizado.parquet` | `rqual_2022_clusterizado_v2.parquet`, `municipios_excepcionais_lof.csv` |
 
 ---
 
