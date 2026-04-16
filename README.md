@@ -266,7 +266,7 @@ O maior volume de exceções LOF — esperado dado o tamanho do cluster (3.054 m
 ---
 
 ### Notebook 03 — Agregação IBGE
-`0-Fonte de Dados/IBGE/RAW/1-Agregacao_Dados_Socio-Economicos1_PATCHED.ipynb`
+`0-Fonte de Dados/IBGE/RAW/03-Agregacao_Dados_Socio-Economicos1_PATCHED.ipynb`
 
 **Entrada:** 5 fontes IBGE independentes (PIB, população/área, urbanização, IDHM, lat/lon)  
 **Saída:** `base_socioeconomica_completa.xlsx` — **5.570 municípios × 56 colunas**
@@ -282,7 +282,7 @@ O maior volume de exceções LOF — esperado dado o tamanho do cluster (3.054 m
 ---
 
 ### Notebook 04 — Integração RQUAL + IBGE
-`1-Base Integrada - RQUAL+SocioEconomicos/03-Integracao e Analise de Variaveis RQUAL+SocioEc.ipynb`
+`1-Base Integrada - RQUAL+SocioEconomicos/04-Integracao e Analise de Variaveis RQUAL+SocioEc.ipynb`
 
 **Entrada:** RQUAL 2022 (5.570 × 11) + IBGE (5.570 × 56)  
 **Saída:** `rqual_2022_integrado.parquet` — **5.570 linhas × 78 colunas**
@@ -296,7 +296,7 @@ O maior volume de exceções LOF — esperado dado o tamanho do cluster (3.054 m
 ---
 
 ### Notebook 05 — Feature Selection
-`2-FeatureSelection/04-Seleção de feicoes.ipynb`
+`2-FeatureSelection/05-Seleção de feicoes.ipynb`
 
 **Entrada:** `rqual_2022_integrado.parquet` (5.570 × 78)  
 **Saída:** `rqual_2022_feats_reduzidas.parquet` — **5.570 linhas × 20 features**
@@ -319,7 +319,7 @@ Pipeline de 6 etapas com logs de auditoria em cada passo:
 ---
 
 ### Notebook 06 — Clustering K-Means + HDBSCAN
-`3-KMeans+HDBSCAN/05-Kmeans.ipynb`
+`3-KMeans+HDBSCAN/06-Kmeans.ipynb`
 
 **Entrada:** `rqual_2022_feats_reduzidas.parquet` (5.570 × 20)  
 **Saída:** `rqual_2022_clusterizado.parquet` — **5.570 linhas com labels de cluster**
@@ -351,7 +351,7 @@ K=2 tem o maior silhouette (0,831), mas produz apenas 2 macro-grupos (Sul-Sudest
 ---
 
 ### Notebook 07 — Interpretação dos Clusters
-`3-KMeans+HDBSCAN/06-Interpretacao_Clusters.ipynb`
+`3-KMeans+HDBSCAN/07-Interpretacao_Clusters.ipynb`
 
 **Entrada:** `rqual_2022_clusterizado.parquet`  
 **Saída:** 5 figuras + `tabela_resumo_clusters.csv`

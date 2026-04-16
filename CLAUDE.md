@@ -42,11 +42,11 @@ Framework-Explicabilidade-Indicadores/
 |-------|----------|-------|--------|
 | 1 | `0-Fonte de Dados/RQUAL/XLSX/01-Leitura e união de todos os estados.ipynb` | 12 arquivos XLSX por estado | `base_RQUAL_unificada.parquet` (5.96M linhas) |
 | 2 | `0-Fonte de Dados/RQUAL/XLSX/02-Análise, Seleção e Preparação de ano base.ipynb` | `base_RQUAL_unificada.parquet` | RQUAL filtrado para 2022 |
-| 3 | `0-Fonte de Dados/IBGE/RAW/1-Agregacao_Dados_Socio-Economicos1_PATCHED.ipynb` | XLSXs IBGE (PIB, pop, IDHM, etc.) | `base_socioeconomica_completa.xlsx` |
-| 4 | `1-Base Integrada.../03-Integracao e Analise de Variaveis RQUAL+SocioEc.ipynb` | RQUAL 2022 + IBGE | `rqual_2022_consolidado_clean.parquet` |
-| 5 | `2-FeatureSelection/04-Seleção de feicoes.ipynb` | `rqual_2022_consolidado_clean.parquet` | `rqual_2022_feats_reduzidas.parquet` |
-| 6 | `3-KMeans+HDBSCAN/05-Kmeans.ipynb` | `rqual_2022_feats_reduzidas.parquet` | `rqual_2022_clusterizado.parquet` + modelos `.pkl` |
-| 7 | `3-KMeans+HDBSCAN/06-Interpretacao_Clusters.ipynb` | `rqual_2022_clusterizado.parquet` | Tabelas interpretativas, figuras, `tabela_resumo_clusters.csv` |
+| 3 | `0-Fonte de Dados/IBGE/RAW/03-Agregacao_Dados_Socio-Economicos1_PATCHED.ipynb` | XLSXs IBGE (PIB, pop, IDHM, etc.) | `base_socioeconomica_completa.xlsx` |
+| 4 | `1-Base Integrada.../04-Integracao e Analise de Variaveis RQUAL+SocioEc.ipynb` | RQUAL 2022 + IBGE | `rqual_2022_consolidado_clean.parquet` |
+| 5 | `2-FeatureSelection/05-Seleção de feicoes.ipynb` | `rqual_2022_consolidado_clean.parquet` | `rqual_2022_feats_reduzidas.parquet` |
+| 6 | `3-KMeans+HDBSCAN/06-Kmeans.ipynb` | `rqual_2022_feats_reduzidas.parquet` | `rqual_2022_clusterizado.parquet` + modelos `.pkl` |
+| 7 | `3-KMeans+HDBSCAN/07-Interpretacao_Clusters.ipynb` | `rqual_2022_clusterizado.parquet` | Tabelas interpretativas, figuras, `tabela_resumo_clusters.csv` |
 | 8 | `3-KMeans+HDBSCAN/08-UMAP_HDBSCAN_LOF.ipynb` | `rqual_2022_clusterizado.parquet` | `rqual_2022_clusterizado_v2.parquet`, `municipios_excepcionais_lof.csv` |
 
 ---
