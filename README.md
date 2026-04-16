@@ -83,6 +83,20 @@ Exatamente 1 município por UF — as capitais estaduais. Benchmark de qualidade
 
 ---
 
+## Visão Consolidada por Cluster
+
+Resumo 360° de cada cluster integrando segmentação, explicabilidade (SHAP) e municípios excepcionais:
+
+| Cluster | N (%) | Features SHAP dominantes | Outliers LOF | Sub-grupos HDBSCAN | Prioridade |
+|---|:---:|---|:---:|---|:---:|
+| **C0 Urbano-Avançado** | 216 (3,9%) | `pib_industria`, `densidade`, `idhm` | 22 | 2 (elite total + gargalo SP/RJ) | Manutenção |
+| **C1 Intermediário** | 3.054 (54,8%) | `idhm`, `lat`, `pib_per_capita` | 306 | — | Monitoramento |
+| **C2 Nordeste Periférico** | 2.057 (36,9%) | `idhm`, `lat`, `lon` | 206 | — | Alta |
+| **C3 Norte/Amazônico** | 216 (3,9%) | `area_km2`, `lon`, `IND5` | 22 | 2 (Amazônia profunda + Agronegócio MT/MS) | Crítica |
+| **C4 Capitais** | 27 (0,5%) | `pib_industria`, `densidade`, `idhm` | 3 | — | Benchmark |
+
+---
+
 ## Municípios Excepcionais — Evolução Metodológica
 
 Para identificar municípios que fogem do padrão do seu próprio cluster, testamos três abordagens ([NB08](3-KMeans+HDBSCAN/08-UMAP_HDBSCAN_LOF.ipynb)) e comparamos os resultados ([NB09](3-KMeans+HDBSCAN/09-Comparacao_Achados_HDBSCAN_vs_LOF.ipynb)):
@@ -217,6 +231,44 @@ O maior volume de exceções LOF — esperado dado o tamanho do cluster (3.054 m
 | **C2 — Nordeste Periférico** | 206 | Disponibilidade ou upload atípicos; Fernando de Noronha como caso-limite |
 | **C3 — Norte/Amazônico** | 22 | Desvios positivos pontuais dentro do pior cluster do país |
 | **C4 — Capitais** | 3 | Capitais amazônicas com perfil de upload desconexo das demais capitais |
+
+---
+
+## Explicabilidade por Cluster — SHAP
+
+Para responder *por que* cada município foi classificado em seu cluster, treinamos um **surrogate Random Forest** (accuracy CV-5: **95,0% ± 0,6%**) para reproduzir os labels K-Means e aplicamos SHAP (TreeExplainer) sobre ele — gerando explicações individuais para os 5.570 municípios.
+
+![SHAP Importância por cluster](3-KMeans+HDBSCAN/fig_shap_heatmap_clusters.png)
+
+### O que realmente define cada cluster
+
+| Cluster | Feature dominante | \|SHAP\| | O que isso revela |
+|---|---|:---:|---|
+| **C0 — Urbano-Avançado** | `pib_industria` | 0.323 | PIB industrial — não qualidade RQUAL — define a elite |
+| **C1 — Intermediário** | `idhm` + `lat` | 0.132 | Desenvolvimento humano + posição geográfica (Sul/Sudeste) |
+| **C2 — Nordeste Periférico** | `idhm` + `lat` + `lon` | 0.197 | **A localização geográfica explica o cluster mais que os próprios indicadores de telecom** |
+| **C3 — Norte/Amazônico** | `area_km2` | **0.355** | A extensão territorial domina — o município é classificado aqui pelo seu tamanho, antes da qualidade do serviço |
+| **C4 — Capitais** | `pib_industria` + `densidade` | 0.096 | Mesmas features do C0, em escala urbana máxima |
+
+![SHAP Barras por cluster](3-KMeans+HDBSCAN/fig_shap_barras_por_cluster.png)
+
+### Três achados que mudam a interpretação regulatória
+
+**1. C3 é criado pela geografia, não pelo serviço**
+
+`area_km2` tem |SHAP| = 0.355 — mais que o dobro do segundo lugar em qualquer cluster. Municípios norte/amazônicos são agrupados por sua imensidão territorial *antes* dos indicadores de qualidade. A má qualidade de telecom no C3 é *consequência* do contexto geográfico, não causa da classificação. A política regulatória deve atacar a barreira territorial, não apenas o indicador de SLA.
+
+**2. C2 é definido pela localização, não pelo IDHM isolado**
+
+`lat` e `lon` somam |SHAP| = 0.264 no C2 — o Nordeste é tão geograficamente coeso que as coordenadas identificam o cluster quase tão bem quanto os indicadores socioeconômicos. Isso confirma que a qualidade operacional inferior do C2 tem raízes estruturalmente regionais.
+
+**3. C0 e C4 são movidos pelo mesmo motor**
+
+`pib_industria` domina em ambos os clusters de alta performance. A distinção entre "municípios avançados" (C0) e "capitais" (C4) é de escala, não de natureza — capitais têm mais do mesmo que os melhores municípios não-capitais.
+
+### SHAP por município
+
+Para cada município, `shap_explicacoes_municipios.csv` registra a **feature que mais determinou sua classificação** e o respectivo valor |SHAP|. Isso permite auditar individualmente por que Tangará da Serra (MT) está no C3 em vez do C1, ou por que Fernando de Noronha (PE) tem LOF score tão alto dentro do C2.
 
 ---
 
@@ -398,6 +450,22 @@ K=2 tem o maior silhouette (0,831), mas produz apenas 2 macro-grupos (Sul-Sudest
 
 ---
 
+### Notebook 10 — SHAP: Explicabilidade por Cluster
+`3-KMeans+HDBSCAN/10-SHAP_Explicabilidade_Clusters.ipynb`
+
+**Entrada:** `rqual_2022_clusterizado_v2.parquet`  
+**Saída:** `shap_importancia_por_cluster.csv`, `shap_explicacoes_municipios.csv`, `shap_matrix_completa.csv`
+
+**O que foi feito:**
+- Treinamento de Random Forest surrogate para prever os rótulos K-Means (acurácia CV-5: 95,0% ± 0,6%)
+- Cálculo de valores SHAP (TreeExplainer) para todos os 5.570 municípios
+- Ranking de importância das 16 features analíticas por cluster — revela o *driver* de cada perfil
+- Identificação da feature dominante de cada município individualmente (exportada em `shap_explicacoes_municipios.csv`)
+- Análise especial dos 559 municípios LOF: quais features os tornam excepcionais dentro do cluster
+- Geração de figuras: heatmap global, barras por cluster, waterfall de representativos, análise LOF
+
+---
+
 ## Instalação
 
 ```bash
@@ -451,6 +519,9 @@ pip install -r requirements.txt
 | `scaler_final.pkl` | `3-KMeans+HDBSCAN/` | RobustScaler ajustado |
 | `kmeans_metricas_por_K.csv` | `3-KMeans+HDBSCAN/` | Métricas de avaliação K=2 a K=12 |
 | `tabela_resumo_clusters.csv` | `3-KMeans+HDBSCAN/` | Perfil médio por cluster |
+| `shap_importancia_por_cluster.csv` | `3-KMeans+HDBSCAN/` | Importância SHAP por feature × cluster (16 × 5) |
+| `shap_explicacoes_municipios.csv` | `3-KMeans+HDBSCAN/` | Feature dominante + \|SHAP\| de cada município (5.570 linhas) |
+| `shap_matrix_completa.csv` | `3-KMeans+HDBSCAN/` | Matriz completa de valores SHAP (5.570 × 16) |
 
 ---
 
