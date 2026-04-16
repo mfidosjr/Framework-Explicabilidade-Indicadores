@@ -85,27 +85,35 @@ Exatamente 1 município por UF — as capitais estaduais. Benchmark de qualidade
 
 ## Municípios Excepcionais — Evolução Metodológica
 
-Para identificar municípios que fogem do padrão do seu próprio cluster, testamos três abordagens documentadas em [`07-UMAP_HDBSCAN_LOF.ipynb`](3-KMeans+HDBSCAN/07-UMAP_HDBSCAN_LOF.ipynb):
+Para identificar municípios que fogem do padrão do seu próprio cluster, testamos três abordagens ([NB07](3-KMeans+HDBSCAN/07-UMAP_HDBSCAN_LOF.ipynb)) e comparamos os resultados ([NB09](3-KMeans+HDBSCAN/09-Comparacao_Achados_HDBSCAN_vs_LOF.ipynb)):
 
-| Tentativa | Abordagem | Taxa de Ruído | Conclusão |
-|-----------|-----------|:---:|-----------|
-| **1** | HDBSCAN direto (20 dimensões) | **96,3%** ❌ | Maldição da dimensionalidade — inviável |
-| **2** | UMAP (10D) + HDBSCAN | Reduzida ✓ | Útil para descoberta exploratória de sub-grupos |
-| **3** | Local Outlier Factor (LOF) | N/A (contínuo) ✓ | **Adotado** — score por município, ideal para uso regulatório |
+| Tentativa | Abordagem | Taxa de Ruído | Municípios | Conclusão |
+|-----------|-----------|:---:|:---:|-----------|
+| **1** | HDBSCAN direto (20 dimensões) | **96,3%** ❌ | 204 (3,7%) | Maldição da dimensionalidade — apenas C0 e C3 |
+| **2** | UMAP (10D) + HDBSCAN | 27,6% ✓ | — | Útil para descoberta de sub-grupos |
+| **3** | LOF por cluster | N/A (contínuo) ✓ | **559 (10,0%)** | **Adotado** — cobre todos os clusters |
 
-> **Método adotado:** LOF aplicado por cluster (`n_neighbors=20`, `contamination=10%`).  
-> Resultado: **~557 municípios excepcionais** com score contínuo de anomalia exportados em `municipios_excepcionais_lof.csv`.
+### Achado central da comparação (NB09): os métodos medem coisas opostas
 
-### Por que LOF e não HDBSCAN?
-O LOF avalia cada município **individualmente** em relação à densidade do seu cluster — produzindo um **ranking contínuo** (maior score = mais atípico). Isso é mais útil para fins regulatórios do que sub-clusters discretos: permite priorizar municípios por grau de excentricidade dentro do seu perfil esperado.
+> **Sobreposição entre HDBSCAN e LOF: 0 municípios** — resultado esperado e revelador.
+
+| Tipo de excepcionalidade | Método | O que detecta |
+|---|---|---|
+| **Exceção de grupo** | HDBSCAN | Municípios similares entre si que formam sub-grupo coeso distinto do cluster pai |
+| **Exceção individual** | LOF | Município isolado, sem vizinhança densa — anomalia pontual |
+
+Os métodos são complementares porque medem **dimensões ortogonais** da excepcionalidade. Um município em um sub-cluster HDBSCAN tem LOF score baixo (está rodeado de similares). Um outlier LOF não forma sub-cluster HDBSCAN (está isolado, sem grupo coeso).
+
+> **763 municípios excepcionais** na união: 204 por coesão de grupo + 559 por isolamento individual.  
+> Exportados em `comparacao_achados_hdbscan_lof.csv`.
 
 ---
 
-## Achados HDBSCAN — Sub-estruturas (Tentativa 1, exploratória)
+## Achados HDBSCAN — Sub-estruturas por coesão de grupo
 
-O HDBSCAN original foi aplicado dentro de cada macro-cluster K-Means, revelando sub-estruturas em C0 e C3. Apesar da alta taxa de ruído (96,3%), os achados têm valor analítico:
+O HDBSCAN revelou sub-estruturas em C0 e C3. Apesar da alta taxa de ruído (96,3%), os 4 sub-clusters têm alto valor analítico — municípios **similares entre si** que divergem do padrão do cluster pai.
 
-> Dos 5.570 municípios, **204 (3,7%)** formaram sub-clusters densos. Os demais foram classificados como *ruído*.
+> Dos 5.570 municípios, **204 (3,7%)** formaram sub-clusters densos em C0 e C3.
 
 ### C3 Norte/Amazônico — dois sub-clusters revelam padrões opostos
 
@@ -309,7 +317,23 @@ K=2 tem o maior silhouette (0,831), mas produz apenas 2 macro-grupos (Sul-Sudest
 - Tentativa 3: Local Outlier Factor (LOF) por cluster com score contínuo de anomalia
 - Comparativo scorecard das três abordagens com critérios explícitos
 - Decisão documentada: LOF adotado para uso regulatório; UMAP mantido para visualização exploratória
-- Identificação de ~557 municípios excepcionais com ranking por grau de excentricidade
+- Identificação de 559 municípios excepcionais com ranking por grau de excentricidade
+
+---
+
+### Notebook 09 — Comparação de Achados: HDBSCAN vs LOF
+`3-KMeans+HDBSCAN/09-Comparacao_Achados_HDBSCAN_vs_LOF.ipynb`
+
+**Entrada:** `rqual_2022_clusterizado_v2.parquet`  
+**Saída:** `comparacao_achados_hdbscan_lof.csv` — **763 municípios excepcionais (HDBSCAN ∪ LOF)**
+
+**O que foi feito:**
+- Cruzamento dos 204 municípios HDBSCAN com os 559 municípios LOF
+- Análise de sobreposição: **0 municípios em comum** — os métodos são ortogonais por construção
+- Teste Mann-Whitney U: municípios HDBSCAN têm LOF score significativamente menor (p<0,001), confirmando que formam grupos coesos e não são anomalias individuais
+- Tipologia dos 763 excepcionais em 4 categorias: Núcleo convergente, Só HDBSCAN, Só LOF, Consenso normal
+- Interpretação por cluster: C1, C2 e C4 possuem apenas exceções LOF; C0 e C3 concentram os sub-clusters HDBSCAN
+- União exportada com tipo de excepcionalidade para uso regulatório
 
 ---
 
@@ -360,7 +384,8 @@ pip install -r requirements.txt
 | `rqual_2022_feats_reduzidas.parquet` | `2-FeatureSelection/` | 20 features selecionadas para clustering |
 | `rqual_2022_clusterizado.parquet` | `3-KMeans+HDBSCAN/` | Resultado K-Means K=5 + HDBSCAN (v1) |
 | `rqual_2022_clusterizado_v2.parquet` | `3-KMeans+HDBSCAN/` | Base enriquecida com UMAP coords + LOF score |
-| `municipios_excepcionais_lof.csv` | `3-KMeans+HDBSCAN/` | ~557 municípios excepcionais (LOF, 10% por cluster) |
+| `municipios_excepcionais_lof.csv` | `3-KMeans+HDBSCAN/` | 559 municípios excepcionais (LOF, 10% por cluster) |
+| `comparacao_achados_hdbscan_lof.csv` | `3-KMeans+HDBSCAN/` | 763 municípios excepcionais (HDBSCAN ∪ LOF, com tipo de excepcionalidade) |
 | `kmeans_model.pkl` | `3-KMeans+HDBSCAN/` | Modelo K-Means treinado (K=5) |
 | `scaler_final.pkl` | `3-KMeans+HDBSCAN/` | RobustScaler ajustado |
 | `kmeans_metricas_por_K.csv` | `3-KMeans+HDBSCAN/` | Métricas de avaliação K=2 a K=12 |
