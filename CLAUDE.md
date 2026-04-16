@@ -46,6 +46,8 @@ Framework-Explicabilidade-Indicadores/
 | 4 | `1-Base Integrada.../03-Integracao e Analise de Variaveis RQUAL+SocioEc.ipynb` | RQUAL 2022 + IBGE | `rqual_2022_consolidado_clean.parquet` |
 | 5 | `2-FeatureSelection/04-Seleção de feicoes.ipynb` | `rqual_2022_consolidado_clean.parquet` | `rqual_2022_feats_reduzidas.parquet` |
 | 6 | `3-KMeans+HDBSCAN/05-Kmeans.ipynb` | `rqual_2022_feats_reduzidas.parquet` | `rqual_2022_clusterizado.parquet` + modelos `.pkl` |
+| 7 | `3-KMeans+HDBSCAN/06-Interpretacao_Clusters.ipynb` | `rqual_2022_clusterizado.parquet` | Tabelas interpretativas, figuras, `tabela_resumo_clusters.csv` |
+| 8 | `3-KMeans+HDBSCAN/07-UMAP_HDBSCAN_LOF.ipynb` | `rqual_2022_clusterizado.parquet` | `rqual_2022_clusterizado_v2.parquet`, `municipios_excepcionais_lof.csv` |
 
 ---
 
@@ -78,7 +80,9 @@ Framework-Explicabilidade-Indicadores/
 | `base_RQUAL_unificada.parquet` | `0-Fonte de Dados/RQUAL/XLSX/` | RQUAL nacional unificado |
 | `rqual_2022_consolidado_clean.parquet` | `1-Base Integrada.../` | Base integrada RQUAL+IBGE 2022 |
 | `rqual_2022_feats_reduzidas.parquet` | `2-FeatureSelection/` | Features selecionadas para clustering |
-| `rqual_2022_clusterizado.parquet` | `3-KMeans+HDBSCAN/` | Resultado final com labels de cluster |
+| `rqual_2022_clusterizado.parquet` | `3-KMeans+HDBSCAN/` | Resultado K-Means K=5 + HDBSCAN original (v1) |
+| `rqual_2022_clusterizado_v2.parquet` | `3-KMeans+HDBSCAN/` | Base enriquecida com UMAP (umap_x/y), LOF (lof_score, lof_outlier) |
+| `municipios_excepcionais_lof.csv` | `3-KMeans+HDBSCAN/` | ~557 municípios excepcionais identificados pelo LOF (10% por cluster) |
 | `kmeans_model.pkl` | `3-KMeans+HDBSCAN/` | Modelo K-Means serializado |
 | `scaler_final.pkl` | `3-KMeans+HDBSCAN/` | RobustScaler serializado |
 | `kmeans_metricas_por_K.csv` | `3-KMeans+HDBSCAN/` | Métricas (silhouette, calinski, etc.) por K |
@@ -122,5 +126,8 @@ Framework-Explicabilidade-Indicadores/
 - Este projeto é **em português**; mantenha variáveis, comentários e documentação em português
 - Os notebooks são a fonte da verdade para a lógica; `src/` contém versões modulares dessas funções
 - Ao modificar o pipeline, preserve os logs de auditoria CSV — são rastreabilidade intencional
-- O K ótimo para K-Means foi determinado empiricamente como **K=2** (silhouette=0.831); mudanças nesse valor devem ser justificadas com métricas
+- O K ótimo para K-Means foi determinado empiricamente como **K=5** (silhouette=0.831); mudanças nesse valor devem ser justificadas com métricas
+- **HDBSCAN direto nas features (20D) produz 96.3% de ruído** — não usar. Ver NB07 para alternativas documentadas
+- Método adotado para identificação de municípios excepcionais: **LOF** (Local Outlier Factor), aplicado por cluster com `n_neighbors=20, contamination=0.10`
+- UMAP 2D (`umap_x`, `umap_y`) gerado em NB07 para visualização exploratória; usar `rqual_2022_clusterizado_v2.parquet` quando precisar dessas colunas
 - Dados brutos grandes (>10 MB) não são commitados via Git padrão — o repositório usa **Git LFS**

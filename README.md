@@ -83,11 +83,29 @@ Exatamente 1 município por UF — as capitais estaduais. Benchmark de qualidade
 
 ---
 
-## Achados HDBSCAN — Sub-estruturas dentro dos clusters
+## Municípios Excepcionais — Evolução Metodológica
 
-O HDBSCAN foi aplicado dentro de cada macro-cluster K-Means para revelar **exceções e subestruturas de densidade local**: municípios que fogem do padrão do seu próprio cluster — seja para melhor ou para pior. Esses são os achados mais acionáveis do framework.
+Para identificar municípios que fogem do padrão do seu próprio cluster, testamos três abordagens documentadas em [`07-UMAP_HDBSCAN_LOF.ipynb`](3-KMeans+HDBSCAN/07-UMAP_HDBSCAN_LOF.ipynb):
 
-> Dos 5.570 municípios, **204 (3,7%)** formaram sub-clusters densos. Os demais foram classificados como *ruído* — casos intermediários sem vizinhança suficientemente densa.
+| Tentativa | Abordagem | Taxa de Ruído | Conclusão |
+|-----------|-----------|:---:|-----------|
+| **1** | HDBSCAN direto (20 dimensões) | **96,3%** ❌ | Maldição da dimensionalidade — inviável |
+| **2** | UMAP (10D) + HDBSCAN | Reduzida ✓ | Útil para descoberta exploratória de sub-grupos |
+| **3** | Local Outlier Factor (LOF) | N/A (contínuo) ✓ | **Adotado** — score por município, ideal para uso regulatório |
+
+> **Método adotado:** LOF aplicado por cluster (`n_neighbors=20`, `contamination=10%`).  
+> Resultado: **~557 municípios excepcionais** com score contínuo de anomalia exportados em `municipios_excepcionais_lof.csv`.
+
+### Por que LOF e não HDBSCAN?
+O LOF avalia cada município **individualmente** em relação à densidade do seu cluster — produzindo um **ranking contínuo** (maior score = mais atípico). Isso é mais útil para fins regulatórios do que sub-clusters discretos: permite priorizar municípios por grau de excentricidade dentro do seu perfil esperado.
+
+---
+
+## Achados HDBSCAN — Sub-estruturas (Tentativa 1, exploratória)
+
+O HDBSCAN original foi aplicado dentro de cada macro-cluster K-Means, revelando sub-estruturas em C0 e C3. Apesar da alta taxa de ruído (96,3%), os achados têm valor analítico:
+
+> Dos 5.570 municípios, **204 (3,7%)** formaram sub-clusters densos. Os demais foram classificados como *ruído*.
 
 ### C3 Norte/Amazônico — dois sub-clusters revelam padrões opostos
 
@@ -279,6 +297,22 @@ K=2 tem o maior silhouette (0,831), mas produz apenas 2 macro-grupos (Sul-Sudest
 
 ---
 
+### Notebook 08 — UMAP + HDBSCAN vs LOF (Municípios Excepcionais)
+`3-KMeans+HDBSCAN/07-UMAP_HDBSCAN_LOF.ipynb`
+
+**Entrada:** `rqual_2022_clusterizado.parquet`  
+**Saída:** `rqual_2022_clusterizado_v2.parquet` + `municipios_excepcionais_lof.csv`
+
+**O que foi feito:**
+- Diagnóstico da falha do HDBSCAN original (96,3% ruído — maldição da dimensionalidade)
+- Tentativa 2: redução dimensional UMAP (2D visualização + 10D clustering) e novo HDBSCAN
+- Tentativa 3: Local Outlier Factor (LOF) por cluster com score contínuo de anomalia
+- Comparativo scorecard das três abordagens com critérios explícitos
+- Decisão documentada: LOF adotado para uso regulatório; UMAP mantido para visualização exploratória
+- Identificação de ~557 municípios excepcionais com ranking por grau de excentricidade
+
+---
+
 ## Instalação
 
 ```bash
@@ -324,7 +358,9 @@ pip install -r requirements.txt
 | `rqual_2022_consolidado_clean.parquet` | `0-Fonte de Dados/RQUAL/XLSX/` | RQUAL 2022 agregado por município |
 | `rqual_2022_integrado.parquet` | `2-FeatureSelection/` | Base integrada RQUAL+IBGE (5.570 × 78) |
 | `rqual_2022_feats_reduzidas.parquet` | `2-FeatureSelection/` | 20 features selecionadas para clustering |
-| `rqual_2022_clusterizado.parquet` | `3-KMeans+HDBSCAN/` | Resultado final com labels de cluster |
+| `rqual_2022_clusterizado.parquet` | `3-KMeans+HDBSCAN/` | Resultado K-Means K=5 + HDBSCAN (v1) |
+| `rqual_2022_clusterizado_v2.parquet` | `3-KMeans+HDBSCAN/` | Base enriquecida com UMAP coords + LOF score |
+| `municipios_excepcionais_lof.csv` | `3-KMeans+HDBSCAN/` | ~557 municípios excepcionais (LOF, 10% por cluster) |
 | `kmeans_model.pkl` | `3-KMeans+HDBSCAN/` | Modelo K-Means treinado (K=5) |
 | `scaler_final.pkl` | `3-KMeans+HDBSCAN/` | RobustScaler ajustado |
 | `kmeans_metricas_por_K.csv` | `3-KMeans+HDBSCAN/` | Métricas de avaliação K=2 a K=12 |
