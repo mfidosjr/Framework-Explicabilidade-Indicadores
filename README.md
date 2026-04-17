@@ -6,7 +6,7 @@
 
 ## Resumo
 
-Este trabalho apresenta um framework analítico de múltiplas camadas para segmentar e explicar a qualidade de serviços de telecomunicações nos 5.570 municípios brasileiros. Combinando indicadores RQUAL (Anatel) com dados socioeconômicos e geográficos do IBGE, aplicamos K-Means (K=5, silhouette=0,831) para identificar cinco perfis municipais distintos — de capitais metropolitanas a municípios norte-amazônicos com cobertura crítica. Sobre essa segmentação, aplicamos HDBSCAN para descoberta de sub-estruturas por coesão de grupo, LOF para detecção de anomalias individuais, e SHAP sobre um modelo surrogate (Random Forest, accuracy=95,0% ± 0,6%) para explicar quais variáveis definem cada perfil. O achado central é que **a classificação de municípios norte-amazônicos é determinada pela extensão territorial (|SHAP|=0,355), não pelos indicadores de serviço** — e que municípios do Nordeste são identificados geograficamente com precisão equivalente à de seus indicadores socioeconômicos. Os resultados subsidiam priorização regulatória e políticas de investimento diferenciadas por perfil territorial.
+Este trabalho apresenta um framework analítico de múltiplas camadas para segmentar e explicar a qualidade de serviços de telecomunicações nos 5.570 municípios brasileiros. Combinando indicadores RQUAL (Anatel) com dados socioeconômicos e geográficos do IBGE, aplicamos K-Means (K=5, silhouette=0,831) para identificar cinco perfis municipais distintos — de capitais metropolitanas a municípios norte-amazônicos com cobertura crítica. Sobre essa segmentação, aplicamos HDBSCAN para descoberta de sub-estruturas por coesão de grupo, LOF para detecção de anomalias individuais, SHAP sobre um modelo surrogate (Random Forest, accuracy=95,0% ± 0,6%) para explicar quais variáveis definem cada perfil, e um **Índice de Invisibilidade à Média (IV)** combinado com matched pairs intracluster para identificar municípios com contexto comparável mas desfechos operacionais sistematicamente divergentes. O achado central é que **a classificação de municípios norte-amazônicos é determinada pela extensão territorial (|SHAP|=0,355), não pelos indicadores de serviço** — e que C3 é o cluster com maior densidade de municípios invisíveis (IV médio 1,36), com o par mais divergente sendo Ibarama/RS ↔ Tunas/RS (score 47,8). Os resultados subsidiam priorização regulatória e políticas de investimento diferenciadas por perfil territorial.
 
 ---
 
@@ -16,7 +16,7 @@ A Anatel publica anualmente o **RQUAL** — um sistema de 8 indicadores que mede
 
 **A pergunta central deste framework:** *É possível segmentar os municípios brasileiros em perfis coerentes que expliquem, simultaneamente, sua qualidade de telecom e seu contexto socioeconômico-territorial?*
 
-Para respondê-la, construímos um pipeline em 10 etapas — da coleta e integração de dados até a explicabilidade individual por município via SHAP. O resultado não é apenas uma classificação: é uma **tipologia regulatória** com identificação de exceções e rastreabilidade de decisão para cada um dos 5.570 municípios.
+Para respondê-la, construímos um pipeline em 11 etapas — da coleta e integração de dados até a formalização de municípios *invisíveis à média* via matched pairs intracluster. O resultado não é apenas uma classificação: é uma **tipologia regulatória** com identificação de exceções e rastreabilidade de decisão para cada um dos 5.570 municípios.
 
 ---
 
@@ -70,6 +70,7 @@ flowchart TD
     H --> J["NB08: UMAP + LOF\n559 excepcionais\nrqual_2022_clusterizado_v2"]
     J --> K["NB09: HDBSCAN ∪ LOF\n763 excepcionais\ncomparacao_achados.csv"]
     J --> L["NB10: SHAP\n5.570 explicações individuais\nshap_explicacoes_municipios.csv"]
+    L --> M["NB11: Invisibilidade à Média\nÍndice IV + Matched Pairs\n4.033 pares intracluster"]
 ```
 
 ### 3.2 Feature Selection (NB05)
@@ -331,7 +332,51 @@ Os métodos medem **dimensões ortogonais** da excepcionalidade: um município e
 
 ---
 
-### 5.5 Visão Consolidada por Cluster
+### 5.5 Invisibilidade à Média — Índice IV e Matched Pairs (NB11)
+
+Municípios dentro do mesmo cluster podem ter contexto socioeconômico comparável e, ainda assim, apresentar desfechos operacionais radicalmente diferentes. Esse fenômeno — aqui formalizado como **invisibilidade à média** — não é capturado por nenhum dos métodos anteriores: nem o K-Means (que agrupa por proximidade global), nem o LOF (que detecta anomalias individuais), nem o HDBSCAN (que detecta coesão de grupo).
+
+**Índice IV:** quantifica o desvio de cada município em relação ao centróide do seu cluster nas dimensões operacionais (RQUAL), ponderando cada indicador pelo peso SHAP do cluster.
+
+$$\text{IV}_i = \sum_j w_{cj} \cdot |z_{ij} - \bar{z}_{cj}|$$
+
+![Distribuição do IV por cluster](3-KMeans+HDBSCAN/fig_iv_distribuicao.png)
+
+| Cluster | IV médio | IV mediano | IV máximo |
+|---------|:---:|:---:|:---:|
+| **C4 Capitais** | 0,22 | 0,21 | 0,47 — cluster mais homogêneo |
+| **C0 Urbano-Avançado** | 0,35 | 0,28 | 1,45 |
+| **C1 Intermediário** | 0,56 | 0,46 | 3,63 — Tunas/RS |
+| **C2 Nordeste Periférico** | 0,81 | 0,76 | 3,37 |
+| **C3 Norte/Amazônico** | **1,36** | 1,33 | 2,79 — cluster mais invisível |
+
+C3 tem o maior IV médio — não apenas é o pior cluster, como é o mais internamente heterogêneo. C4, ao contrário, é o mais homogêneo: capitais convergem para um padrão comum.
+
+**Matched pairs intracluster:** identificação de pares de municípios no mesmo cluster com contexto socioeconômico similar (distância euclidiana no espaço de features IBGE) e desfecho operacional divergente (distância no espaço RQUAL). Total: **4.033 pares**.
+
+![Distribuição dos matched pairs](3-KMeans+HDBSCAN/fig_matched_pairs_distribuicao.png)
+
+| Cluster | Pares |
+|---------|:---:|
+| C0 Urbano-Avançado | 90 |
+| C1 Intermediário | 2.319 |
+| C2 Nordeste Periférico | 1.485 |
+| C3 Norte/Amazônico | 139 |
+
+**Par mais divergente:** Ibarama/RS ↔ Tunas/RS (score 47,8) — municípios gaúchos com contexto praticamente idêntico, mas Tunas tem IND4 = −4,06σ e IND5 = −4,31σ enquanto Ibarama opera próximo da média do cluster.
+
+**Indicador dominante da divergência por cluster:**
+- C0: `INF4-UP` — upload define os extremos no cluster de excelência
+- C1 e C2: `IND5` — resolução no prazo é o principal divisor interno
+- C3: `IND4` — taxa de atendimento separa os municípios amazônicos entre si
+
+![Casos ilustrativos — radar dos pares divergentes](3-KMeans+HDBSCAN/fig_casos_ilustrativos_radar.png)
+
+> Os matched pairs são a matéria-prima regulatória mais valiosa do framework: provam que o problema não é o cluster inteiro, mas municípios específicos que poderiam ter melhor desempenho dado seu contexto — e que estão invisíveis à média.
+
+---
+
+### 5.6 Visão Consolidada por Cluster
 
 Síntese 360° integrando segmentação, explicabilidade (SHAP) e municípios excepcionais:
 
@@ -467,6 +512,22 @@ Artefatos: `kmeans_model.pkl`, `scaler_final.pkl`, `kmeans_metricas_por_K.csv`, 
 
 ---
 
+#### Notebook 11 — Invisibilidade à Média e Matched Pairs Intracluster
+`3-KMeans+HDBSCAN/11-Invisibilidade_Media_Matched_Pairs.ipynb`
+
+**Entrada:** `rqual_2022_clusterizado.csv` · `shap_importancia_por_cluster.csv` · `shap_explicacoes_municipios.csv`  
+**Saída:** `iv_invisibilidade_municipios.csv` · `matched_pairs_intracluster.csv`
+
+**O que foi feito:**
+- Cálculo do Índice IV (invisibilidade à média) para os 5.570 municípios — desvio ponderado por SHAP em relação ao centróide do cluster
+- C3 Norte/Amazônico identificado como o cluster mais internamente heterogêneo (IV médio 1,36)
+- Identificação de 4.033 matched pairs intracluster: mesmo cluster, contexto socioeconômico similar, desfecho RQUAL divergente
+- Par mais divergente: Ibarama/RS ↔ Tunas/RS (score 47,8)
+- Indicador dominante da divergência: `IND5` em C1 e C2, `INF4-UP` em C0, `IND4` em C3
+- Casos ilustrativos com narrativa regulatória para os top-3 pares por cluster
+
+---
+
 ### Instalação
 
 ```bash
@@ -498,6 +559,8 @@ pip install -r requirements.txt
 | `shap_importancia_por_cluster.csv` | `3-KMeans+HDBSCAN/` | Importância SHAP feature × cluster (16 × 5) |
 | `shap_explicacoes_municipios.csv` | `3-KMeans+HDBSCAN/` | Feature dominante + \|SHAP\| de cada município (5.570 linhas) |
 | `shap_matrix_completa.csv` | `3-KMeans+HDBSCAN/` | Matriz completa de valores SHAP (5.570 × 16) |
+| `iv_invisibilidade_municipios.csv` | `3-KMeans+HDBSCAN/` | Índice IV de invisibilidade à média (5.570 municípios) |
+| `matched_pairs_intracluster.csv` | `3-KMeans+HDBSCAN/` | 4.033 pares matched (contexto similar, desfecho divergente) |
 
 ---
 
