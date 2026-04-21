@@ -6,7 +6,8 @@ Framework analítico para segmentar e explicar os **5.570 municípios brasileiro
 
 **Domínio:** Telecomunicações / Políticas públicas / Ciência de dados  
 **Idioma do projeto:** Português brasileiro  
-**Linguagem:** Python 3.10+ em Jupyter Notebooks
+**Linguagem:** Python 3.10+ em Jupyter Notebooks  
+**Caminho local:** `/Users/marcofidos/GitHub/Framework-Explicabilidade-Indicadores/`
 
 ---
 
