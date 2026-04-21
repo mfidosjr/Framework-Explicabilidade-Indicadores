@@ -15,23 +15,26 @@ Framework analítico para segmentar e explicar os **5.570 municípios brasileiro
 ```
 Framework-Explicabilidade-Indicadores/
 ├── CLAUDE.md                        ← este arquivo
-├── README.md                        ← visão geral para humanos
+├── README.md                        ← visão geral / artigo de pesquisa
 ├── requirements.txt                 ← dependências do ambiente
 │
-├── 0-Fonte de Dados/
-│   ├── IBGE/RAW/                    ← dados brutos IBGE + notebook de agregação
-│   └── RQUAL/XLSX/                  ← dados brutos RQUAL (12 estados) + notebooks
+├── data/
+│   ├── raw/
+│   │   ├── rqual/                   ← 12 XLSX RQUAL por estado
+│   │   └── ibge/                    ← XLSXs/JSONs IBGE (PIB, pop, IDHM, etc.)
+│   ├── interim/                     ← parquets intermediários do pipeline
+│   ├── output/                      ← CSVs de artefatos finais citados nos artigos
+│   └── logs/                        ← CSVs de auditoria por fase
 │
-├── 1-Base Integrada - RQUAL+SocioEconomicos/   ← join RQUAL + IBGE
-├── 2-FeatureSelection/              ← seleção e engenharia de features
-├── 3-KMeans+HDBSCAN/               ← clustering e análise
+├── notebooks/                       ← 11 notebooks (01–11), planos
+├── figures/                         ← 30+ figuras PNG geradas pelo pipeline
+├── models/                          ← kmeans_model.pkl, scaler_final.pkl, config JSON
+├── docs/                            ← manual RQUAL (Anatel) e glossário
 │
-├── src/                             ← módulos Python reutilizáveis
-│   ├── data_loader.py               ← leitura/unificação de dados
-│   ├── feature_engineering.py       ← pipeline de feature selection
-│   └── clustering.py                ← utilitários de clustering
-│
-└── Documentacao/                    ← manual RQUAL (Anatel) e glossário
+└── src/                             ← módulos Python reutilizáveis
+    ├── data_loader.py
+    ├── feature_engineering.py
+    └── clustering.py
 ```
 
 ---
@@ -40,14 +43,17 @@ Framework-Explicabilidade-Indicadores/
 
 | Passo | Notebook | Input | Output |
 |-------|----------|-------|--------|
-| 1 | `0-Fonte de Dados/RQUAL/XLSX/01-Leitura e união de todos os estados.ipynb` | 12 arquivos XLSX por estado | `base_RQUAL_unificada.parquet` (5.96M linhas) |
-| 2 | `0-Fonte de Dados/RQUAL/XLSX/02-Análise, Seleção e Preparação de ano base.ipynb` | `base_RQUAL_unificada.parquet` | RQUAL filtrado para 2022 |
-| 3 | `0-Fonte de Dados/IBGE/RAW/03-Agregacao_Dados_Socio-Economicos1_PATCHED.ipynb` | XLSXs IBGE (PIB, pop, IDHM, etc.) | `base_socioeconomica_completa.xlsx` |
-| 4 | `1-Base Integrada.../04-Integracao e Analise de Variaveis RQUAL+SocioEc.ipynb` | RQUAL 2022 + IBGE | `rqual_2022_consolidado_clean.parquet` |
-| 5 | `2-FeatureSelection/05-Seleção de feicoes.ipynb` | `rqual_2022_consolidado_clean.parquet` | `rqual_2022_feats_reduzidas.parquet` |
-| 6 | `3-KMeans+HDBSCAN/06-Kmeans.ipynb` | `rqual_2022_feats_reduzidas.parquet` | `rqual_2022_clusterizado.parquet` + modelos `.pkl` |
-| 7 | `3-KMeans+HDBSCAN/07-Interpretacao_Clusters.ipynb` | `rqual_2022_clusterizado.parquet` | Tabelas interpretativas, figuras, `tabela_resumo_clusters.csv` |
-| 8 | `3-KMeans+HDBSCAN/08-UMAP_HDBSCAN_LOF.ipynb` | `rqual_2022_clusterizado.parquet` | `rqual_2022_clusterizado_v2.parquet`, `municipios_excepcionais_lof.csv` |
+| 1 | `notebooks/01-Leitura e união de todos os estados.ipynb` | 12 XLSX em `data/raw/rqual/` | `data/interim/base_RQUAL_unificada.parquet` (5.96M linhas) |
+| 2 | `notebooks/02-Análise, Seleção e Preparação de ano base.ipynb` | `data/interim/base_RQUAL_unificada.parquet` | RQUAL filtrado para 2022 |
+| 3 | `notebooks/03-Agregacao_Dados_Socio-Economicos1_PATCHED.ipynb` | XLSXs em `data/raw/ibge/` | `data/interim/base_socioeconomica_completa.xlsx` |
+| 4 | `notebooks/04-Integracao e Analise de Variaveis RQUAL+SocioEc.ipynb` | RQUAL 2022 + IBGE | `data/interim/rqual_2022_consolidado_clean.parquet` |
+| 5 | `notebooks/05-Seleção de feicoes.ipynb` | `data/interim/rqual_2022_consolidado_clean.parquet` | `data/interim/rqual_2022_feats_reduzidas.parquet` |
+| 6 | `notebooks/06-Kmeans.ipynb` | `data/interim/rqual_2022_feats_reduzidas.parquet` | `data/interim/rqual_2022_clusterizado.parquet` + modelos em `models/` |
+| 7 | `notebooks/07-Interpretacao_Clusters.ipynb` | `data/interim/rqual_2022_clusterizado.parquet` | Figuras, `data/output/tabela_resumo_clusters.csv` |
+| 8 | `notebooks/08-UMAP_HDBSCAN_LOF.ipynb` | `data/interim/rqual_2022_clusterizado.parquet` | `data/interim/rqual_2022_clusterizado_v2.parquet`, `data/output/municipios_excepcionais_lof.csv` |
+| 9 | `notebooks/09-Comparacao_Achados_HDBSCAN_vs_LOF.ipynb` | `data/interim/rqual_2022_clusterizado_v2.parquet` | `data/output/comparacao_achados_hdbscan_lof.csv` |
+| 10 | `notebooks/10-SHAP_Explicabilidade_Clusters.ipynb` | `data/interim/rqual_2022_clusterizado.parquet` | `data/output/shap_importancia_por_cluster.csv`, `shap_explicacoes_municipios.csv`, `shap_matrix_completa.csv` |
+| 11 | `notebooks/11-Invisibilidade_Media_Matched_Pairs.ipynb` | `data/interim/rqual_2022_clusterizado.csv` + SHAPs | `data/output/iv_invisibilidade_municipios.csv`, `matched_pairs_intracluster.csv` |
 
 ---
 
@@ -77,16 +83,23 @@ Framework-Explicabilidade-Indicadores/
 
 | Arquivo | Local | Descrição |
 |---------|-------|-----------|
-| `base_RQUAL_unificada.parquet` | `0-Fonte de Dados/RQUAL/XLSX/` | RQUAL nacional unificado |
-| `rqual_2022_consolidado_clean.parquet` | `1-Base Integrada.../` | Base integrada RQUAL+IBGE 2022 |
-| `rqual_2022_feats_reduzidas.parquet` | `2-FeatureSelection/` | Features selecionadas para clustering |
-| `rqual_2022_clusterizado.parquet` | `3-KMeans+HDBSCAN/` | Resultado K-Means K=5 + HDBSCAN original (v1) |
-| `rqual_2022_clusterizado_v2.parquet` | `3-KMeans+HDBSCAN/` | Base enriquecida com UMAP (umap_x/y), LOF (lof_score, lof_outlier) |
-| `municipios_excepcionais_lof.csv` | `3-KMeans+HDBSCAN/` | ~557 municípios excepcionais identificados pelo LOF (10% por cluster) |
-| `kmeans_model.pkl` | `3-KMeans+HDBSCAN/` | Modelo K-Means serializado |
-| `scaler_final.pkl` | `3-KMeans+HDBSCAN/` | RobustScaler serializado |
-| `kmeans_metricas_por_K.csv` | `3-KMeans+HDBSCAN/` | Métricas (silhouette, calinski, etc.) por K |
-| `kmeans_escolha_config.json` | `3-KMeans+HDBSCAN/` | Configuração reproduzível do clustering |
+| `base_RQUAL_unificada.parquet` | `data/interim/` | RQUAL nacional unificado |
+| `rqual_2022_consolidado_clean.parquet` | `data/interim/` | Base integrada RQUAL+IBGE 2022 |
+| `rqual_2022_feats_reduzidas.parquet` | `data/interim/` | Features selecionadas para clustering |
+| `rqual_2022_clusterizado.parquet` | `data/interim/` | Resultado K-Means K=5 + HDBSCAN original (v1) |
+| `rqual_2022_clusterizado_v2.parquet` | `data/interim/` | Base enriquecida com UMAP (umap_x/y), LOF (lof_score, lof_outlier) |
+| `municipios_excepcionais_lof.csv` | `data/output/` | ~559 municípios excepcionais identificados pelo LOF (10% por cluster) |
+| `comparacao_achados_hdbscan_lof.csv` | `data/output/` | 763 municípios excepcionais (HDBSCAN ∪ LOF, com tipo) |
+| `tabela_resumo_clusters.csv` | `data/output/` | Perfil médio por cluster |
+| `shap_importancia_por_cluster.csv` | `data/output/` | Importância SHAP feature × cluster (16 × 5) |
+| `shap_explicacoes_municipios.csv` | `data/output/` | Feature dominante + \|SHAP\| por município (5.570 linhas) |
+| `shap_matrix_completa.csv` | `data/output/` | Matriz completa de valores SHAP (5.570 × 16) |
+| `iv_invisibilidade_municipios.csv` | `data/output/` | Índice IV de invisibilidade à média (5.570 municípios) |
+| `matched_pairs_intracluster.csv` | `data/output/` | 4.033 pares matched (contexto similar, desfecho divergente) |
+| `kmeans_model.pkl` | `models/` | Modelo K-Means serializado |
+| `scaler_final.pkl` | `models/` | RobustScaler serializado |
+| `kmeans_metricas_por_K.csv` | `data/output/` | Métricas (silhouette, calinski, etc.) por K |
+| `kmeans_escolha_config.json` | `models/` | Configuração reproduzível do clustering |
 
 ---
 
@@ -115,8 +128,8 @@ Framework-Explicabilidade-Indicadores/
 
 - Codificação de municípios: sempre `cod_mun` (int 7 dígitos, ex: `5300108`)
 - Formato de dados primário: **Parquet** (via PyArrow)
-- Logs de auditoria: CSVs em subpastas `logs/` de cada fase
-- Modelos serializados: **pickle** (`.pkl`) na pasta da fase correspondente
+- Logs de auditoria: CSVs em `data/logs/`
+- Modelos serializados: **pickle** (`.pkl`) em `models/`
 - Nomes de colunas: snake_case em português (ex: `tx_urbanizacao`, `pib_per_capita`)
 
 ---
@@ -125,9 +138,11 @@ Framework-Explicabilidade-Indicadores/
 
 - Este projeto é **em português**; mantenha variáveis, comentários e documentação em português
 - Os notebooks são a fonte da verdade para a lógica; `src/` contém versões modulares dessas funções
-- Ao modificar o pipeline, preserve os logs de auditoria CSV — são rastreabilidade intencional
+- Ao modificar o pipeline, preserve os logs de auditoria CSV em `data/logs/` — são rastreabilidade intencional
 - O K ótimo para K-Means foi determinado empiricamente como **K=5** (silhouette=0.831); mudanças nesse valor devem ser justificadas com métricas
-- **HDBSCAN direto nas features (20D) produz 96.3% de ruído** — não usar. Ver NB07 para alternativas documentadas
+- **HDBSCAN direto nas features (20D) produz 96.3% de ruído** — não usar. Ver NB08 para alternativas documentadas
 - Método adotado para identificação de municípios excepcionais: **LOF** (Local Outlier Factor), aplicado por cluster com `n_neighbors=20, contamination=0.10`
-- UMAP 2D (`umap_x`, `umap_y`) gerado em NB07 para visualização exploratória; usar `rqual_2022_clusterizado_v2.parquet` quando precisar dessas colunas
+- UMAP 2D (`umap_x`, `umap_y`) gerado em NB08 para visualização exploratória; usar `data/interim/rqual_2022_clusterizado_v2.parquet` quando precisar dessas colunas
+- **Índice de Invisibilidade à Média (IV)** calculado em NB11: `IV_i = Σ w_cj · |z_ij - z̄_cj|` com pesos SHAP normalizados por cluster
 - Dados brutos grandes (>10 MB) não são commitados via Git padrão — o repositório usa **Git LFS**
+- Caminhos internos dos notebooks usam `../data/...` e `../figures/...` relativo à pasta `notebooks/`

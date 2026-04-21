@@ -119,7 +119,7 @@ K-Means não tem função de decisão interpretável. A abordagem surrogate reso
 1. **Surrogate Random Forest:** treinado para reproduzir os labels K-Means (accuracy CV-5: **95,0% ± 0,6%**)
 2. **SHAP TreeExplainer:** aplicado ao RF para gerar valores SHAP para todos os 5.570 municípios em 16 features analíticas
 
-![Confusion Matrix do modelo surrogate](3-KMeans+HDBSCAN/fig_shap_confusion_matrix.png)
+![Confusion Matrix do modelo surrogate](figures/fig_shap_confusion_matrix.png)
 
 A matriz de confusão confirma que o surrogate reproduz a segmentação K-Means com alta fidelidade — garantindo que os valores SHAP explicam os clusters reais, não um proxy degradado.
 
@@ -139,7 +139,7 @@ A matriz de confusão confirma que o surrogate reproduz a segmentação K-Means 
 
 #### Perfil médio por cluster (z-scores)
 
-![Heatmap de perfil dos clusters](3-KMeans+HDBSCAN/fig_perfil_clusters_heatmap.png)
+![Heatmap de perfil dos clusters](figures/fig_perfil_clusters_heatmap.png)
 
 O heatmap mostra os valores médios padronizados de cada cluster nos indicadores RQUAL e nas variáveis socioeconômicas. Valores positivos (verde) indicam desempenho acima da média nacional; negativos (vermelho), abaixo.
 
@@ -150,23 +150,23 @@ O heatmap mostra os valores médios padronizados de cada cluster nos indicadores
 
 #### Comparação dos indicadores RQUAL por cluster
 
-![Radar dos clusters](3-KMeans+HDBSCAN/fig_radar_clusters.png)
+![Radar dos clusters](figures/fig_radar_clusters.png)
 
 O radar evidencia a separação entre os clusters: C3 (vermelho) afunda em IND4 e IND5, enquanto C0 e C4 dominam em INF4-UP e IND9.
 
 #### Distribuição geográfica
 
-![Mapa geográfico dos clusters](3-KMeans+HDBSCAN/fig_mapa_clusters.png)
+![Mapa geográfico dos clusters](figures/fig_mapa_clusters.png)
 
-![Distribuição regional por cluster](3-KMeans+HDBSCAN/fig_distribuicao_regional.png)
+![Distribuição regional por cluster](figures/fig_distribuicao_regional.png)
 
 A segmentação reflete a estrutura regional do Brasil: **C0** é 67% Sudeste · **C2** é 84% Nordeste · **C3** é 68% Norte · **C4** distribui-se por todas as regiões.
 
 #### Distribuição dos indicadores e cobertura por cluster
 
-![Boxplots dos indicadores](3-KMeans+HDBSCAN/fig_boxplot_indicadores.png)
+![Boxplots dos indicadores](figures/fig_boxplot_indicadores.png)
 
-![Cobertura de infraestrutura por cluster](3-KMeans+HDBSCAN/fig_cobertura_por_cluster.png)
+![Cobertura de infraestrutura por cluster](figures/fig_cobertura_por_cluster.png)
 
 ---
 
@@ -174,7 +174,7 @@ A segmentação reflete a estrutura regional do Brasil: **C0** é 67% Sudeste ·
 
 Para confirmar que a separação entre clusters não é artefato do algoritmo, aplicamos **ANOVA paramétrica** e **teste de Kruskal-Wallis** (não-paramétrico) sobre os 14 indicadores.
 
-![Kruskal-Wallis — poder discriminatório por feature](3-KMeans+HDBSCAN/fig_kruskal_wallis_discriminacao.png)
+![Kruskal-Wallis — poder discriminatório por feature](figures/fig_kruskal_wallis_discriminacao.png)
 
 **Resultado:** todos os 14 indicadores apresentam p < 0,001 nos dois testes — a separação entre os 5 clusters é estatisticamente significativa em todas as dimensões. Os indicadores com maior poder discriminatório são `area_km2`, `lat`, `idhm` e `IND5` — alinhando-se com os achados SHAP (seção 5.3).
 
@@ -182,7 +182,7 @@ Para confirmar que a separação entre clusters não é artefato do algoritmo, a
 
 ### 4.3 Projeção UMAP
 
-![UMAP 2D — K-Means clusters](3-KMeans+HDBSCAN/fig_umap_2d_kmeans.png)
+![UMAP 2D — K-Means clusters](figures/fig_umap_2d_kmeans.png)
 
 A projeção UMAP em 2D ilustra a estrutura de separação aprendida pelo K-Means no espaço de 20 features. C3 e C4 formam ilhas compactas; C1 e C2 ocupam regiões contíguas com fronteira suave; C0 aparece como satélite de C4 — consistente com o achado SHAP de que ambos são movidos pelas mesmas features (`pib_industria`, `densidade`).
 
@@ -196,7 +196,7 @@ O HDBSCAN revelou sub-estruturas densas em C0 e C3: **204 municípios (3,7%)** f
 
 #### C3 — Norte/Amazônico: dois padrões opostos dentro do pior cluster
 
-![Sub-clusters HDBSCAN no C3](3-KMeans+HDBSCAN/fig_hdbscan_c3_subgrupos.png)
+![Sub-clusters HDBSCAN no C3](figures/fig_hdbscan_c3_subgrupos.png)
 
 | Grupo | Mun. | IND4 | IND5 | Perfil |
 |-------|:---:|:---:|:---:|--------|
@@ -206,11 +206,11 @@ O HDBSCAN revelou sub-estruturas densas em C0 e C3: **204 municípios (3,7%)** f
 
 **Sub-cluster Agronegócio MT/MS:** 19 municípios de MT (15), MS (3) e MG (1) — Tangará da Serra, Campo Novo do Parecis, Canarana, Cáceres, Juína. Apesar de serem extensos, rurais e classificados no "pior cluster" pelo K-Means, a dinâmica do agronegócio viabilizou qualidade radicalmente superior: IND5 salta de −2,19σ para −0,59σ. São a prova de que o contexto geográfico não é impeditivo quando há investimento.
 
-![C3 Agronegócio — HDBSCAN vs LOF](3-KMeans+HDBSCAN/fig_c3_agronegocio_hdbscan_vs_lof.png)
+![C3 Agronegócio — HDBSCAN vs LOF](figures/fig_c3_agronegocio_hdbscan_vs_lof.png)
 
 #### C0 — Urbano-Avançado: dois tipos de excelência
 
-![Sub-clusters HDBSCAN no C0](3-KMeans+HDBSCAN/fig_hdbscan_c0_subgrupos.png)
+![Sub-clusters HDBSCAN no C0](figures/fig_hdbscan_c0_subgrupos.png)
 
 | Grupo | Mun. | IND4 | INF4-UP | Perfil |
 |-------|:---:|:---:|:---:|--------|
@@ -227,9 +227,9 @@ O LOF identificou **559 municípios excepcionais** (10% por cluster) com combina
 
 > **LOF score > 1,5** como limiar de alta excentricidade. Score máximo observado: **2,266** (Águas de São Pedro/SP).
 
-![Distribuição dos scores LOF por cluster](3-KMeans+HDBSCAN/fig_lof_resultado.png)
+![Distribuição dos scores LOF por cluster](figures/fig_lof_resultado.png)
 
-![Mapa geográfico dos municípios excepcionais](3-KMeans+HDBSCAN/fig_lof_mapa_excepcionais.png)
+![Mapa geográfico dos municípios excepcionais](figures/fig_lof_mapa_excepcionais.png)
 
 #### C1 — Intermediário: 306 excepcionais
 
@@ -266,9 +266,9 @@ As 3 capitais excepcionais são amazônicas — perfil de upload elevado combina
 
 ### 5.3 Explicabilidade por cluster — SHAP
 
-![SHAP Importância global](3-KMeans+HDBSCAN/fig_shap_summary_global.png)
+![SHAP Importância global](figures/fig_shap_summary_global.png)
 
-![SHAP Importância por cluster (heatmap)](3-KMeans+HDBSCAN/fig_shap_heatmap_clusters.png)
+![SHAP Importância por cluster (heatmap)](figures/fig_shap_heatmap_clusters.png)
 
 #### O que realmente define cada cluster
 
@@ -280,7 +280,7 @@ As 3 capitais excepcionais são amazônicas — perfil de upload elevado combina
 | **C3 — Norte/Amazônico** | `area_km2` | **0,355** | A extensão territorial domina — classificado pelo tamanho antes da qualidade do serviço |
 | **C4 — Capitais** | `pib_industria` + `densidade` | 0,096 | Mesmas features do C0, em escala urbana máxima |
 
-![SHAP Barras por cluster](3-KMeans+HDBSCAN/fig_shap_barras_por_cluster.png)
+![SHAP Barras por cluster](figures/fig_shap_barras_por_cluster.png)
 
 #### Três achados que mudam a interpretação regulatória
 
@@ -298,13 +298,13 @@ As 3 capitais excepcionais são amazônicas — perfil de upload elevado combina
 
 #### Waterfall — explicações individuais
 
-![SHAP Waterfall — municípios representativos](3-KMeans+HDBSCAN/fig_shap_waterfall_representativos.png)
+![SHAP Waterfall — municípios representativos](figures/fig_shap_waterfall_representativos.png)
 
 Os gráficos waterfall mostram, para municípios representativos de cada cluster, quais features contribuíram positiva ou negativamente para a classificação. Cada município tem sua explicação individual registrada em `shap_explicacoes_municipios.csv`.
 
 #### SHAP nos municípios excepcionais LOF
 
-![SHAP — features dominantes nos municípios excepcionais](3-KMeans+HDBSCAN/fig_shap_lof_features_dominantes.png)
+![SHAP — features dominantes nos municípios excepcionais](figures/fig_shap_lof_features_dominantes.png)
 
 Os municípios excepcionais tendem a ter uma **feature com valor SHAP desproporcional** em relação ao restante do cluster — confirmando que sua excentricidade é direcionada, não ruído aleatório. Fernando de Noronha, por exemplo, é dominado por `lon` e `IND4` em direções opostas ao perfil do C2.
 
@@ -321,11 +321,11 @@ Os municípios excepcionais tendem a ter uma **feature com valor SHAP desproporc
 
 Os métodos medem **dimensões ortogonais** da excepcionalidade: um município em sub-cluster HDBSCAN tem LOF score baixo (está rodeado de similares). Um outlier LOF não forma sub-cluster (está isolado, sem grupo coeso). **Confirmação estatística:** Mann-Whitney U — municípios HDBSCAN têm LOF score significativamente menor (p < 0,001).
 
-![Sobreposição HDBSCAN vs LOF](3-KMeans+HDBSCAN/fig_sobreposicao_hdbscan_lof.png)
+![Sobreposição HDBSCAN vs LOF](figures/fig_sobreposicao_hdbscan_lof.png)
 
-![Comparação das três abordagens testadas](3-KMeans+HDBSCAN/fig_comparacao_tentativas.png)
+![Comparação das três abordagens testadas](figures/fig_comparacao_tentativas.png)
 
-![Mapa comparativo — HDBSCAN ∪ LOF](3-KMeans+HDBSCAN/fig_mapa_comparacao_achados.png)
+![Mapa comparativo — HDBSCAN ∪ LOF](figures/fig_mapa_comparacao_achados.png)
 
 > **763 municípios excepcionais** na união: 204 por coesão de grupo (HDBSCAN) + 559 por isolamento individual (LOF).  
 > Exportados com tipo de excepcionalidade em `comparacao_achados_hdbscan_lof.csv`.
@@ -340,7 +340,7 @@ Municípios dentro do mesmo cluster podem ter contexto socioeconômico comparáv
 
 $$\text{IV}_i = \sum_j w_{cj} \cdot |z_{ij} - \bar{z}_{cj}|$$
 
-![Distribuição do IV por cluster](3-KMeans+HDBSCAN/fig_iv_distribuicao.png)
+![Distribuição do IV por cluster](figures/fig_iv_distribuicao.png)
 
 | Cluster | IV médio | IV mediano | IV máximo |
 |---------|:---:|:---:|:---:|
@@ -354,7 +354,7 @@ C3 tem o maior IV médio — não apenas é o pior cluster, como é o mais inter
 
 **Matched pairs intracluster:** identificação de pares de municípios no mesmo cluster com contexto socioeconômico similar (distância euclidiana no espaço de features IBGE) e desfecho operacional divergente (distância no espaço RQUAL). Total: **4.033 pares**.
 
-![Distribuição dos matched pairs](3-KMeans+HDBSCAN/fig_matched_pairs_distribuicao.png)
+![Distribuição dos matched pairs](figures/fig_matched_pairs_distribuicao.png)
 
 | Cluster | Pares |
 |---------|:---:|
@@ -370,7 +370,7 @@ C3 tem o maior IV médio — não apenas é o pior cluster, como é o mais inter
 - C1 e C2: `IND5` — resolução no prazo é o principal divisor interno
 - C3: `IND4` — taxa de atendimento separa os municípios amazônicos entre si
 
-![Casos ilustrativos — radar dos pares divergentes](3-KMeans+HDBSCAN/fig_casos_ilustrativos_radar.png)
+![Casos ilustrativos — radar dos pares divergentes](figures/fig_casos_ilustrativos_radar.png)
 
 > Os matched pairs são a matéria-prima regulatória mais valiosa do framework: provam que o problema não é o cluster inteiro, mas municípios específicos que poderiam ter melhor desempenho dado seu contexto — e que estão invisíveis à média.
 
@@ -417,7 +417,7 @@ Os dois clusters de alta performance têm o mesmo motor (PIB industrial + densid
 ### Pipeline detalhado
 
 #### Notebook 01 — Leitura e Unificação RQUAL
-`0-Fonte de Dados/RQUAL/XLSX/01-Leitura e união de todos os estados.ipynb`
+`notebooks/01-Leitura e união de todos os estados.ipynb`
 
 **Entrada:** 12 arquivos XLSX por agrupamento de estados  
 **Saída:** `base_RQUAL_unificada.parquet` — **5.962.723 linhas × 19 colunas**
@@ -429,7 +429,7 @@ Os dois clusters de alta performance têm o mesmo motor (PIB industrial + densid
 ---
 
 #### Notebook 02 — Preparação do Ano Base
-`0-Fonte de Dados/RQUAL/XLSX/02-Análise, Seleção e Preparação de ano base.ipynb`
+`notebooks/02-Análise, Seleção e Preparação de ano base.ipynb`
 
 **Entrada:** `base_RQUAL_unificada.parquet`  
 **Saída:** `rqual_2022_consolidado_clean.parquet` — **5.570 linhas × 11 colunas**
@@ -442,7 +442,7 @@ Os dois clusters de alta performance têm o mesmo motor (PIB industrial + densid
 ---
 
 #### Notebook 03 — Agregação IBGE
-`0-Fonte de Dados/IBGE/RAW/03-Agregacao_Dados_Socio-Economicos1_PATCHED.ipynb`
+`notebooks/03-Agregacao_Dados_Socio-Economicos1_PATCHED.ipynb`
 
 **Entrada:** 5 fontes IBGE independentes (PIB, população/área, urbanização, IDHM, lat/lon)  
 **Saída:** `base_socioeconomica_completa.xlsx` — **5.570 municípios × 56 colunas**
@@ -454,7 +454,7 @@ Os dois clusters de alta performance têm o mesmo motor (PIB industrial + densid
 ---
 
 #### Notebook 04 — Integração RQUAL + IBGE
-`1-Base Integrada - RQUAL+SocioEconomicos/04-Integracao e Analise de Variaveis RQUAL+SocioEc.ipynb`
+`notebooks/04-Integracao e Analise de Variaveis RQUAL+SocioEc.ipynb`
 
 **Entrada:** RQUAL 2022 (5.570 × 11) + IBGE (5.570 × 56)  
 **Saída:** `rqual_2022_integrado.parquet` — **5.570 linhas × 78 colunas**
@@ -465,7 +465,7 @@ Os dois clusters de alta performance têm o mesmo motor (PIB industrial + densid
 ---
 
 #### Notebook 05 — Feature Selection
-`2-FeatureSelection/05-Seleção de feicoes.ipynb`
+`notebooks/05-Seleção de feicoes.ipynb`
 
 **Entrada:** `rqual_2022_integrado.parquet` (5.570 × 78)  
 **Saída:** `rqual_2022_feats_reduzidas.parquet` — **5.570 linhas × 20 features**
@@ -475,7 +475,7 @@ Logs: `log_poda_correlacao.csv`, `log_vif_iterativo.csv`, `log_zscore_validacao_
 ---
 
 #### Notebook 06 — Clustering K-Means + HDBSCAN
-`3-KMeans+HDBSCAN/06-Kmeans.ipynb`
+`notebooks/06-Kmeans.ipynb`
 
 **Entrada:** `rqual_2022_feats_reduzidas.parquet`  
 **Saída:** `rqual_2022_clusterizado.parquet`
@@ -485,35 +485,35 @@ Artefatos: `kmeans_model.pkl`, `scaler_final.pkl`, `kmeans_metricas_por_K.csv`, 
 ---
 
 #### Notebook 07 — Interpretação dos Clusters
-`3-KMeans+HDBSCAN/07-Interpretacao_Clusters.ipynb`
+`notebooks/07-Interpretacao_Clusters.ipynb`
 
 **Saída:** heatmap · radar · mapa geográfico · distribuição regional · boxplots · ANOVA/Kruskal-Wallis · `tabela_resumo_clusters.csv`
 
 ---
 
 #### Notebook 08 — UMAP + HDBSCAN vs LOF
-`3-KMeans+HDBSCAN/08-UMAP_HDBSCAN_LOF.ipynb`
+`notebooks/08-UMAP_HDBSCAN_LOF.ipynb`
 
 **Saída:** `rqual_2022_clusterizado_v2.parquet` (com `umap_x`, `umap_y`, `lof_score`, `lof_outlier`) + `municipios_excepcionais_lof.csv`
 
 ---
 
 #### Notebook 09 — Comparação HDBSCAN vs LOF
-`3-KMeans+HDBSCAN/09-Comparacao_Achados_HDBSCAN_vs_LOF.ipynb`
+`notebooks/09-Comparacao_Achados_HDBSCAN_vs_LOF.ipynb`
 
 **Saída:** `comparacao_achados_hdbscan_lof.csv` — **763 municípios excepcionais (HDBSCAN ∪ LOF)** com tipo de excepcionalidade
 
 ---
 
 #### Notebook 10 — SHAP: Explicabilidade por Cluster
-`3-KMeans+HDBSCAN/10-SHAP_Explicabilidade_Clusters.ipynb`
+`notebooks/10-SHAP_Explicabilidade_Clusters.ipynb`
 
 **Saída:** `shap_importancia_por_cluster.csv` · `shap_explicacoes_municipios.csv` · `shap_matrix_completa.csv`
 
 ---
 
 #### Notebook 11 — Invisibilidade à Média e Matched Pairs Intracluster
-`3-KMeans+HDBSCAN/11-Invisibilidade_Media_Matched_Pairs.ipynb`
+`notebooks/11-Invisibilidade_Media_Matched_Pairs.ipynb`
 
 **Entrada:** `rqual_2022_clusterizado.csv` · `shap_importancia_por_cluster.csv` · `shap_explicacoes_municipios.csv`  
 **Saída:** `iv_invisibilidade_municipios.csv` · `matched_pairs_intracluster.csv`
@@ -544,23 +544,23 @@ pip install -r requirements.txt
 
 | Arquivo | Localização | Descrição |
 |---------|------------|-----------|
-| `base_RQUAL_unificada.parquet` | `0-Fonte de Dados/RQUAL/XLSX/` | RQUAL nacional (5,96M × 19) |
-| `rqual_2022_consolidado_clean.parquet` | `0-Fonte de Dados/RQUAL/XLSX/` | RQUAL 2022 agregado por município |
-| `rqual_2022_integrado.parquet` | `2-FeatureSelection/` | Base integrada RQUAL+IBGE (5.570 × 78) |
-| `rqual_2022_feats_reduzidas.parquet` | `2-FeatureSelection/` | 20 features selecionadas para clustering |
-| `rqual_2022_clusterizado.parquet` | `3-KMeans+HDBSCAN/` | K-Means K=5 + HDBSCAN local (v1) |
-| `rqual_2022_clusterizado_v2.parquet` | `3-KMeans+HDBSCAN/` | Base enriquecida com UMAP coords + LOF score |
-| `municipios_excepcionais_lof.csv` | `3-KMeans+HDBSCAN/` | 559 municípios excepcionais (LOF, 10% por cluster) |
-| `comparacao_achados_hdbscan_lof.csv` | `3-KMeans+HDBSCAN/` | 763 municípios excepcionais (HDBSCAN ∪ LOF, com tipo) |
-| `kmeans_model.pkl` | `3-KMeans+HDBSCAN/` | Modelo K-Means treinado (K=5) |
-| `scaler_final.pkl` | `3-KMeans+HDBSCAN/` | RobustScaler ajustado |
-| `kmeans_metricas_por_K.csv` | `3-KMeans+HDBSCAN/` | Métricas de avaliação K=2 a K=12 |
-| `tabela_resumo_clusters.csv` | `3-KMeans+HDBSCAN/` | Perfil médio por cluster |
-| `shap_importancia_por_cluster.csv` | `3-KMeans+HDBSCAN/` | Importância SHAP feature × cluster (16 × 5) |
-| `shap_explicacoes_municipios.csv` | `3-KMeans+HDBSCAN/` | Feature dominante + \|SHAP\| de cada município (5.570 linhas) |
-| `shap_matrix_completa.csv` | `3-KMeans+HDBSCAN/` | Matriz completa de valores SHAP (5.570 × 16) |
-| `iv_invisibilidade_municipios.csv` | `3-KMeans+HDBSCAN/` | Índice IV de invisibilidade à média (5.570 municípios) |
-| `matched_pairs_intracluster.csv` | `3-KMeans+HDBSCAN/` | 4.033 pares matched (contexto similar, desfecho divergente) |
+| `base_RQUAL_unificada.parquet` | `data/interim/` | RQUAL nacional (5,96M × 19) |
+| `rqual_2022_consolidado_clean.parquet` | `data/interim/` | RQUAL 2022 agregado por município |
+| `rqual_2022_integrado.parquet` | `data/interim/` | Base integrada RQUAL+IBGE (5.570 × 78) |
+| `rqual_2022_feats_reduzidas.parquet` | `data/interim/` | 20 features selecionadas para clustering |
+| `rqual_2022_clusterizado.parquet` | `data/interim/` | K-Means K=5 + HDBSCAN local (v1) |
+| `rqual_2022_clusterizado_v2.parquet` | `data/interim/` | Base enriquecida com UMAP coords + LOF score |
+| `municipios_excepcionais_lof.csv` | `data/output/` | 559 municípios excepcionais (LOF, 10% por cluster) |
+| `comparacao_achados_hdbscan_lof.csv` | `data/output/` | 763 municípios excepcionais (HDBSCAN ∪ LOF, com tipo) |
+| `kmeans_model.pkl` | `models/` | Modelo K-Means treinado (K=5) |
+| `scaler_final.pkl` | `models/` | RobustScaler ajustado |
+| `kmeans_metricas_por_K.csv` | `data/output/` | Métricas de avaliação K=2 a K=12 |
+| `tabela_resumo_clusters.csv` | `data/output/` | Perfil médio por cluster |
+| `shap_importancia_por_cluster.csv` | `data/output/` | Importância SHAP feature × cluster (16 × 5) |
+| `shap_explicacoes_municipios.csv` | `data/output/` | Feature dominante + \|SHAP\| de cada município (5.570 linhas) |
+| `shap_matrix_completa.csv` | `data/output/` | Matriz completa de valores SHAP (5.570 × 16) |
+| `iv_invisibilidade_municipios.csv` | `data/output/` | Índice IV de invisibilidade à média (5.570 municípios) |
+| `matched_pairs_intracluster.csv` | `data/output/` | 4.033 pares matched (contexto similar, desfecho divergente) |
 
 ---
 
