@@ -1,1 +1,32 @@
 .build/
+
+# Local OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Secrets and local credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.kubeconfig
+
+# Local databases and caches
+*.sqlite
+*.sqlite3
+*.db
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Generated documents
+readme-*.pdf
+README.pdf
