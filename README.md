@@ -528,6 +528,82 @@ Artefatos: `kmeans_model.pkl`, `scaler_final.pkl`, `kmeans_metricas_por_K.csv`, 
 
 ---
 
+### Hiperparâmetros do Experimento
+
+Todos os valores abaixo são os exatos utilizados no experimento — `random_state=42` em todos os componentes para reprodutibilidade.
+
+#### K-Means (NB06)
+
+| Parâmetro | Valor |
+|---|---|
+| K escolhido | 5 |
+| Scaler | RobustScaler |
+| Seeds avaliadas | 42, 7, 123, 2025, 99 |
+| n_init por rodada | 25 |
+| K avaliados | 2 a 12 |
+| random_state | 42 |
+
+#### UMAP 2D — visualização (NB08)
+
+| Parâmetro | Valor |
+|---|---|
+| n_components | 2 |
+| n_neighbors | 15 |
+| min_dist | 0.1 |
+| metric | euclidean |
+| random_state | 42 |
+
+#### UMAP 10D — entrada para HDBSCAN (NB08)
+
+| Parâmetro | Valor |
+|---|---|
+| n_components | 10 |
+| n_neighbors | 15 |
+| min_dist | **0.0** (compacta clusters para HDBSCAN) |
+| metric | euclidean |
+| random_state | 42 |
+
+#### HDBSCAN Global — sobre UMAP 10D (NB08)
+
+| Parâmetro | Valor |
+|---|---|
+| min_cluster_size | 30 (~0,5% dos 5.570 municípios) |
+| min_samples | 10 |
+| cluster_selection_method | eom |
+| metric | euclidean |
+
+#### HDBSCAN Local — por macro-cluster (NB08)
+
+| Parâmetro | Valor |
+|---|---|
+| min_cluster_size | `max(10, int(0.05 × n_cluster))` — dinâmico |
+| min_samples | 5 |
+| cluster_selection_method | eom |
+| metric | euclidean |
+
+#### LOF — método adotado (NB08)
+
+| Parâmetro | Valor |
+|---|---|
+| n_neighbors | 20 |
+| contamination | 0.10 (10% por cluster) |
+| metric | euclidean |
+| algorithm | auto |
+| Limiar de alta excentricidade | score > 1.5 (referência analítica) |
+
+#### Random Forest Surrogate — SHAP (NB10)
+
+| Parâmetro | Valor |
+|---|---|
+| n_estimators | 300 |
+| max_depth | None (sem limite) |
+| min_samples_leaf | 5 |
+| random_state | 42 |
+| Validação | StratifiedKFold(n_splits=5, shuffle=True, random_state=42) |
+| Accuracy CV-5 | **95,0% ± 0,6%** |
+
+---
+
 ### Instalação
 
 ```bash
