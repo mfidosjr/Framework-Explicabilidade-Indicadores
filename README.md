@@ -1,4 +1,4 @@
-# Framework de Explicabilidade de Indicadores de Qualidade de Telecomunicações
+# Framework de Explicabilidade de Indicadores de Qualidade de Telecomunicações (FEI)
 
 > Segmentação e explicabilidade dos **5.570 municípios brasileiros** por qualidade de serviços de telecomunicações — combinando K-Means, HDBSCAN, LOF e SHAP sobre dados RQUAL (Anatel) e IBGE.
 
